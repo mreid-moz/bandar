@@ -9,6 +9,10 @@ public class QueryConfiguration extends Configuration {
     @NotEmpty
     @JsonProperty
     private String basePath;
-    
+
+    @JsonProperty
+    private String hdfsPath;
+
     public String getBasePath() { return basePath; }
+    public String getHdfsPath() { return hdfsPath; }
 }

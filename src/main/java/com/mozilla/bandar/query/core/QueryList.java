@@ -1,28 +1,24 @@
 package com.mozilla.bandar.query.core;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QueryList {
-    private final List<String> queries;
-    
-    public QueryList(String path) {
-        List<String> tempQueries = new ArrayList<String>();
-        File dir = new File(path);
-        if (dir.isDirectory()) {
-            for (File file : dir.listFiles()) {
-                if (file.isFile() && file.canRead()) {
-                    tempQueries.add(file.getName());
-                }
-            }
+    private final Map<String,List<String>> queries;
+
+    public QueryList(List<QueryProvider> providers) {
+
+        Map<String,List<String>> tempQueries = new HashMap<String,List<String>>();
+        for (QueryProvider provider : providers) {
+            tempQueries.put(provider.getName(), provider.getQueryNames());
         }
-        
-        this.queries = Collections.unmodifiableList(tempQueries);
+
+        this.queries = Collections.unmodifiableMap(tempQueries);
     }
-    
-    public List<String> getQueries() {
+
+    public Map<String,List<String>> getQueries() {
         return queries;
     }
 }

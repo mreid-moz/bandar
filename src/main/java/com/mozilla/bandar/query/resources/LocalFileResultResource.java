@@ -10,24 +10,25 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.mozilla.bandar.query.core.QueryResult;
+import com.mozilla.bandar.query.core.LocalFileProvider;
+import com.mozilla.bandar.query.core.LocalFileResult;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/query/{name}")
+@Path("/query/file/{name}")
 @Produces(MediaType.TEXT_PLAIN)
-public class QueryResultResource {
-    private final String basePath;
-    
-    public QueryResultResource(String basePath) {
-        this.basePath = basePath;
+public class LocalFileResultResource {
+    private final LocalFileProvider provider;
+
+    public LocalFileResultResource(LocalFileProvider provider) {
+        this.provider = provider;
     }
-    
+
     @GET
     @Timed
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public Response getQueryResult(@PathParam("name") String name) {
-        QueryResult result = new QueryResult(basePath, name);
+        LocalFileResult result = provider.getQueryResult(name);
         if (result.exists()) {
             if (result.canRead()) {
                 return Response.ok(result).build();
