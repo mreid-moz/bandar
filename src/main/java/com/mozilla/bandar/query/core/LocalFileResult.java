@@ -42,7 +42,12 @@ public class LocalFileResult implements StreamingOutput {
     @Override
     public void write(OutputStream outputStream) throws IOException,
             WebApplicationException {
-        Files.copy(sourceFile, outputStream);
+        // Just in case users don't check first
+        if (isValidChild) {
+            Files.copy(sourceFile, outputStream);
+        } else {
+            throw new IOException("Attempted access outside chroot");
+        }
     }
 
     public boolean canRead() {
