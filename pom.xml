@@ -49,6 +49,21 @@
     
     <build>
         <plugins>
+				<plugin>
+				  <groupId>com.atlassian.maven.plugins</groupId>
+				  <artifactId>maven-clover2-plugin</artifactId>
+				  <configuration>
+				    <licenseLocation>clover.license</licenseLocation>
+				  </configuration>
+				  <executions>
+				    <execution>
+				      <phase>pre-site</phase>
+				      <goals>
+				        <goal>instrument</goal>
+				      </goals>
+				    </execution>
+				  </executions>
+				</plugin>        
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
