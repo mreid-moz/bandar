@@ -55,6 +55,7 @@
 				  <configuration>
 				    <licenseLocation>clover.license</licenseLocation>
 				  </configuration>
+				  <!-- 
 				  <executions>
 				    <execution>
 				      <phase>pre-site</phase>
@@ -63,6 +64,7 @@
 				      </goals>
 				    </execution>
 				  </executions>
+				   -->
 				</plugin>        
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
