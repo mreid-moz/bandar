@@ -30,6 +30,8 @@ public class LocalFileProvider implements QueryProvider {
             }
         }
 
+        // TODO: sort?
+
         return Collections.unmodifiableList(tempQueries);
     }
 

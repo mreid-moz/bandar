@@ -14,16 +14,22 @@ import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import com.mozilla.bandar.Constants;
+import com.mozilla.bandar.util.TestUtils;
 
 public class TestLocalFileProvider {
-    final String providerBasePath = "src/test/resources/test_file_query/test_parent/test_root";
+    final String providerBasePath = Constants.VALID_FILE_PROVIDER_PATH;
     LocalFileProvider provider;
 
     @Before
     public void setUp() throws Exception {
         provider = new LocalFileProvider(providerBasePath);
+        TestUtils.setUnreadables();
     }
 
     @Test
@@ -49,22 +55,26 @@ public class TestLocalFileProvider {
         requestBadFile("my_bogus_filename.tar.gz", false);
     }
 
+    @Test
+    public void test_generate_io_exception() {
+        File parent = Mockito.mock(File.class);
+        String error = "DON'T PANIC: This is an expected error during testing.";
+        try {
+            Mockito.when(parent.getCanonicalPath()).thenThrow(new IOException(error));
+        } catch (IOException e) {
+            fail("Mock should not have thrown an exception");
+        }
+
+        LocalFileResult pitcher = new LocalFileResult(parent, new File("garbage"));
+        assertFalse(pitcher.exists());
+        assertFalse(pitcher.canRead());
+    }
+
     private void requestGoodFile(String filename, String contents) {
         LocalFileResult fileResult = provider.getQueryResult(filename);
         assertTrue(fileResult.exists());
         assertTrue(fileResult.canRead());
-        try {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream(20);
-            fileResult.write(bytes);
-            String fileContent = bytes.toString("UTF-8");
-            assertEquals(contents, fileContent);
-        } catch (WebApplicationException e) {
-            fail("getting query result threw a WebApplicationException");
-            e.printStackTrace();
-        } catch (IOException e) {
-            fail("getting query result threw an IOException");
-            e.printStackTrace();
-        }
+        assertTrue(TestUtils.resultContains(fileResult, contents));
     }
 
     // Ensure that the given file will cause an IO Exception to be thrown.
@@ -94,4 +104,8 @@ public class TestLocalFileProvider {
         assertNull(fileContent);
     }
 
+    @After
+    public void tearDown() throws Exception {
+        TestUtils.unsetUnreadables();
+    }
 }

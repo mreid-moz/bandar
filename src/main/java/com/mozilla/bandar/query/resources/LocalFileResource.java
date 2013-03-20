@@ -4,7 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,7 +24,7 @@ public class LocalFileResource {
     @GET
     @Timed
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
-    public Response getQueryResult(@PathParam("name") String name) {
+    public Response getQueryResult() {
         return Response.ok(provider.getQueryNames()).build();
     }
 }

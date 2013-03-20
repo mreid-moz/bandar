@@ -18,20 +18,25 @@ public class LocalFileResult implements StreamingOutput {
 
     Logger logger = LoggerFactory.getLogger(LocalFileResult.class);
 
+
     public LocalFileResult(String path, String filename) {
-        this.sourceFile = new File(path + File.separator + filename);
+        this(new File(path), new File(path + File.separator + filename));
+    }
+
+    public LocalFileResult(File parent, File child) {
+        this.sourceFile = child;
 
         // Make sure we're chrooted.
         // Example: http://localhost:8080/query/file/..%2Ftest
         // This gives you "path/../test"
         boolean insideChroot = false;
         try {
-            String canonicalPath = new File(path).getCanonicalPath();
+            String canonicalPath = parent.getCanonicalPath();
             String canonicalChild = this.sourceFile.getCanonicalPath();
             if (canonicalChild.startsWith(canonicalPath)) {
                 insideChroot = true;
             } else {
-                logger.warn("Attempted access outside chroot: {}", filename);
+                logger.warn("Attempted access outside chroot: {}", child.getName());
             }
         } catch (IOException e) {
             logger.error("Error checking chroot for requested file", e);
