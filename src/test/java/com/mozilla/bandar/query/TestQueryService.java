@@ -17,6 +17,7 @@ public class TestQueryService {
     private final Environment environment = mock(Environment.class);
     private final QueryService service = new QueryService();
     private final QueryConfiguration config = new QueryConfiguration();
+    @SuppressWarnings("unchecked")
     private final Bootstrap<QueryConfiguration> bootstrap = mock(Bootstrap.class);
 
     @Before
