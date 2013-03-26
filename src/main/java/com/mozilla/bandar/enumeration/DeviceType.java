@@ -1,4 +1,4 @@
-package com.mozilla.bandar.interval;
+package com.mozilla.bandar.enumeration;
 
 public enum DeviceType {
 	DESKTOP("DESKTOP"), MOBILE("MOBILE");

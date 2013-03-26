@@ -1,5 +1,8 @@
 package com.mozilla.bandar.query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mozilla.bandar.constant.Constants;
 import com.mozilla.bandar.dnt.Data;
 import com.mozilla.bandar.health.BaseDirHealthCheck;
@@ -14,9 +17,11 @@ import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 
 public class QueryService extends Service<QueryConfiguration> {
-	Data DailyDesktopDntData = new Data(Constants.DESKTOP, Constants.DAILY);
-	DntResource dnt = new DntResource(DailyDesktopDntData);
-	
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryService.class);
+    
+	Data dddd; //= new Data(Constants.DESKTOP, Constants.DAILY);
+	DntResource dnt;// = new DntResource(DailyDesktopDntData);
+
     public static void main(String[] args) throws Exception {
         new QueryService().run(args);
     }
@@ -28,9 +33,10 @@ public class QueryService extends Service<QueryConfiguration> {
 
     @Override
     public void run(QueryConfiguration configuration, Environment environment) throws Exception {
+    	LOGGER.info("INIT BANDAR");
+    	dnt = new DntResource(new Data(Constants.DESKTOP, Constants.DAILY));
+    	LOGGER.info("COMPLETE: LOADING DNT DATA");
     	
-    	DailyDesktopDntData = new Data(Constants.DESKTOP, Constants.DAILY);
-    	System.err.println("DONE LOADING DNT DATA");
         final String basePath = configuration.getBasePath();
         final String hdfsPath = configuration.getHdfsPath();
         final LocalFileProvider localFileProvider = new LocalFileProvider(basePath);

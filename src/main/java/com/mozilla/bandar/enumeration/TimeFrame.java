@@ -1,4 +1,4 @@
-package com.mozilla.bandar.interval;
+package com.mozilla.bandar.enumeration;
 
 public enum TimeFrame {
 	DAILY("D"), WEEKLY("W"), MONTHLY("M"), YEARLY("Y");

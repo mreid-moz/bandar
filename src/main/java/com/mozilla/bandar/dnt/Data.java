@@ -9,11 +9,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-import com.mozilla.bandar.interval.DeviceType;
-import com.mozilla.bandar.interval.TimeFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.mozilla.bandar.enumeration.DeviceType;
+import com.mozilla.bandar.enumeration.TimeFrame;
 
 public class Data {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(Data.class);
 	private String deviceType;
 	private String intervalCode;
 	private Map<Date, Float> dailyNumbers = new HashMap<Date, Float>();
@@ -22,8 +25,11 @@ public class Data {
 	public Data(String deviceType, String intervalCode) {
 		this.deviceType = deviceType;
 		this.intervalCode = intervalCode;
+		LOGGER.debug("INFO: INVOKING DATA CLASS");
+
 		if (TimeFrame.valueOf(intervalCode).equals(TimeFrame.DAILY)) {
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.DESKTOP)) {
+				LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode);
 				readDesktopDailyNumbers(deviceType);
 			}
 		}
@@ -35,6 +41,7 @@ public class Data {
 		for (Map.Entry<Date, Float> d : dailyNumbers.entrySet()) {
 			sb.append(d.getKey() + "-" + d.getValue());
 		}
+		
 		return sb.toString();
 	}
 	
