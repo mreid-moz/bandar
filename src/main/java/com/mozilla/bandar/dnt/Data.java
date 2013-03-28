@@ -50,8 +50,8 @@ public class Data {
 		JSONObject obj;
 		for (Map.Entry<String, String> d : dailyNumbers.entrySet()) {
 			obj  = new JSONObject();;
-			obj.put("date", d.getKey());
-			obj.put("perc", d.getValue());
+			obj.put(Constants.JSON_DNT_DAILY_KEY_DATE, d.getKey());
+			obj.put(Constants.JSON_DNT_DAILY_KEY_PERCENTAGE, d.getValue());
 			data_list.add(obj);
 		}
 		return data_list.toJSONString();

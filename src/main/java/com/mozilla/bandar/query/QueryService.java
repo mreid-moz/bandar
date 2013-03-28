@@ -19,7 +19,6 @@ import com.yammer.dropwizard.config.Environment;
 public class QueryService extends Service<QueryConfiguration> {
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryService.class);
     
-	Data dddd; //= new Data(Constants.DESKTOP, Constants.DAILY);
 	DntResource dnt;// = new DntResource(DailyDesktopDntData);
 
     public static void main(String[] args) throws Exception {
@@ -35,7 +34,7 @@ public class QueryService extends Service<QueryConfiguration> {
     public void run(QueryConfiguration configuration, Environment environment) throws Exception {
     	LOGGER.info("INIT: LOADING DNT DATA");
     	dnt = new DntResource(new Data(Constants.DESKTOP, Constants.DAILY, configuration.getDataPath()));
-    	LOGGER.info("COMPLETE: LOADING DNT DATA");
+    	LOGGER.info("COMPLETE: DONE LOADING DNT DATA");
 
         final String basePath = configuration.getBasePath();
         final String hdfsPath = configuration.getHdfsPath();
