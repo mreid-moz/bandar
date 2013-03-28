@@ -1,52 +1,64 @@
 package com.mozilla.bandar.dnt;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mozilla.bandar.constant.Constants;
 import com.mozilla.bandar.enumeration.DeviceType;
 import com.mozilla.bandar.enumeration.TimeFrame;
 
 public class Data {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Data.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Data.class);
 	private String deviceType;
 	private String intervalCode;
-	private Map<Date, Float> dailyNumbers = new HashMap<Date, Float>();
+	private Map<String, String> dailyNumbers = new LinkedHashMap<String, String>();
 	private String jsonData;
+	private String baseFilePath;
 
-	public Data(String deviceType, String intervalCode) {
+	public Data(String deviceType, String intervalCode, String baseFilePath) {
 		this.deviceType = deviceType;
 		this.intervalCode = intervalCode;
+		this.baseFilePath = baseFilePath;
+
 		LOGGER.debug("INFO: INVOKING DATA CLASS");
 
 		if (TimeFrame.valueOf(intervalCode).equals(TimeFrame.DAILY)) {
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.DESKTOP)) {
+
 				LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode);
 				readDesktopDailyNumbers(deviceType);
 			}
 		}
 
 	}
-	
+
+
+	@SuppressWarnings("unchecked")
 	public String displayDailyNumbers(String deviceType) {
-		StringBuilder sb = new StringBuilder();
-		for (Map.Entry<Date, Float> d : dailyNumbers.entrySet()) {
-			sb.append(d.getKey() + "-" + d.getValue());
+		JSONArray data_list = new JSONArray();
+		JSONObject obj;
+		for (Map.Entry<String, String> d : dailyNumbers.entrySet()) {
+			obj  = new JSONObject();;
+			obj.put("date", d.getKey());
+			obj.put("perc", d.getValue());
+			data_list.add(obj);
 		}
-		
-		return sb.toString();
+		return data_list.toJSONString();
 	}
-	
+
 	private void readDesktopDailyNumbers(String deviceType) {
-		this.dailyNumbers = readMockDailyData(deviceType);
+		this.dailyNumbers = readDataFromFile(deviceType, baseFilePath + Constants.DNT_DESKTOP_DAILY_FILE);
 	}
 
 	public String getDeviceType() {
@@ -57,11 +69,11 @@ public class Data {
 		this.deviceType = deviceType;
 	}
 
-	public Map<Date, Float> getDailyNumbers() {
+	public Map<String, String> getDailyNumbers() {
 		return dailyNumbers;
 	}
 
-	public void setDailyNumbers(Map<Date, Float> dailyNumbers) {
+	public void setDailyNumbers(Map<String, String> dailyNumbers) {
 		this.dailyNumbers = dailyNumbers;
 	}
 
@@ -73,27 +85,29 @@ public class Data {
 		this.jsonData = jsonData;
 	}
 
-	protected HashMap<Date, Float> readMockDailyData(String deviceType) {
-		HashMap<Date, Float> mockData = new HashMap<Date, Float>();
-		try {
-			String dt = "2013-01-01";  // Start date
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Calendar c = Calendar.getInstance();
-			c.setTime(sdf.parse(dt));
-			Random r = new Random();
-			int Low = 0;
-			int High = 20;		
-			for (int i = 0; i < 15; i++) {
-				c.add(Calendar.DATE, 1);  // number of days to add
-				dt = sdf.format(c.getTime());  // dt is now the new date			
-				mockData.put(new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH).parse(dt), new Float(r.nextInt(High-Low) + Low));
+
+	protected LinkedHashMap<String, String> readDataFromFile(String deviceType, String filePath) {
+		LinkedHashMap<String, String> dailyDNT = new LinkedHashMap<String, String>();
+		try{
+			// Open the file that is the first 
+			FileInputStream fstream = new FileInputStream(filePath);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			//Read File Line By Line
+			while ((strLine = br.readLine()) != null)   {
+				String[] splitTab = strLine.split("\t");
+				dailyDNT.put(splitTab[0], splitTab[1]);
 			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//Close the input stream
+			in.close();
+		}catch (Exception e){//Catch exception if any
+			LOGGER.error("Unable to read daily file", e.getMessage());
 		}
 
-		return mockData;
+
+		return dailyDNT;
 	}
 
 	public String getIntervalCode() {

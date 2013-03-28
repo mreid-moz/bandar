@@ -33,12 +33,13 @@ public class QueryService extends Service<QueryConfiguration> {
 
     @Override
     public void run(QueryConfiguration configuration, Environment environment) throws Exception {
-    	LOGGER.info("INIT BANDAR");
-    	dnt = new DntResource(new Data(Constants.DESKTOP, Constants.DAILY));
+    	LOGGER.info("INIT: LOADING DNT DATA");
+    	dnt = new DntResource(new Data(Constants.DESKTOP, Constants.DAILY, configuration.getDataPath()));
     	LOGGER.info("COMPLETE: LOADING DNT DATA");
-    	
+
         final String basePath = configuration.getBasePath();
         final String hdfsPath = configuration.getHdfsPath();
+        
         final LocalFileProvider localFileProvider = new LocalFileProvider(basePath);
         final HDFSProvider hdfsProvider = new HDFSProvider(hdfsPath);
         environment.addResource(new QueryResource(localFileProvider, hdfsProvider));

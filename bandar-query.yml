@@ -1,5 +1,7 @@
 basePath: /tmp/bandar
 
+dataPath: data/
+
 # Logging settings.
 logging:
 

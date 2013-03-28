@@ -12,10 +12,15 @@ public class QueryConfiguration extends Configuration {
 
     @JsonProperty
     private String hdfsPath;
+    
+    @JsonProperty
+    private String dataPath;
 
     public String getBasePath() { return basePath; }
     public String getHdfsPath() { return hdfsPath; }
+    public String getDataPath() { return dataPath; }
 
     public void setBasePath(String basePath) { this.basePath = basePath; }
     public void setHdfsPath(String hdfsPath) { this.hdfsPath = hdfsPath; }
+    public void setDataPath(String dataPath) { this.dataPath = dataPath; }
 }

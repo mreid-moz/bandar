@@ -29,7 +29,7 @@ public class DntResource {
 	
 	// This method is called if TEXT_PLAIN is request
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public String getAggreggateInstallData(@QueryParam("device") String deviceType, @QueryParam("duration") String duration) {
 		
 		if (!EnumUtils.isValidEnum(DeviceType.class, deviceType)) {
@@ -42,7 +42,7 @@ public class DntResource {
 			
 		}
 		
-		return dddd.displayDailyNumbers("DESKTOP");
+		return dddd.displayDailyNumbers(deviceType);
 	}
 
 }
