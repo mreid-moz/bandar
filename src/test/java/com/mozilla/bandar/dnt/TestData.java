@@ -8,8 +8,9 @@ public class TestData {
 
     @Test
     public void test() {
-    	Data data = new Data("DESKTOP", "DAILY", "data/");
-    	String jsonData = data.displayDailyNumbers("DESKTOP");
+    	Data data = new Data();
+    	data.readData("DESKTOP", "DAILY", "data/");
+    	String jsonData = data.displayNumbers("DESKTOP", "DAILY");
         System.err.println("data: " + jsonData);
         assertNotNull(jsonData);
     }

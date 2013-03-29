@@ -20,7 +20,7 @@ public class QueryService extends Service<QueryConfiguration> {
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryService.class);
     
 	DntResource dnt;// = new DntResource(DailyDesktopDntData);
-
+	Data d;
     public static void main(String[] args) throws Exception {
         new QueryService().run(args);
     }
@@ -33,7 +33,10 @@ public class QueryService extends Service<QueryConfiguration> {
     @Override
     public void run(QueryConfiguration configuration, Environment environment) throws Exception {
     	LOGGER.info("INIT: LOADING DNT DATA");
-    	dnt = new DntResource(new Data(Constants.DESKTOP, Constants.DAILY, configuration.getDataPath()));
+    	d = new Data();
+    	loadDntData(configuration);
+    	
+    	dnt = new DntResource(d);
     	LOGGER.info("COMPLETE: DONE LOADING DNT DATA");
 
         final String basePath = configuration.getBasePath();
@@ -48,5 +51,12 @@ public class QueryService extends Service<QueryConfiguration> {
         
         environment.addResource(dnt);
     }
+    
+    private void loadDntData(QueryConfiguration configuration) {
+    	d.readData(Constants.DESKTOP, Constants.DAILY, configuration.getDataPath());
+    	d.readData(Constants.DESKTOP, Constants.WEEKLY, configuration.getDataPath());
+    	d.readData(Constants.MOBILE, Constants.DAILY, configuration.getDataPath());
+    	d.readData(Constants.MOBILE, Constants.WEEKLY, configuration.getDataPath());
 
+    }
 }

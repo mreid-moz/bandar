@@ -42,7 +42,7 @@ public class DntResource {
 			
 		}
 		
-		return dddd.displayDailyNumbers(deviceType);
+		return dddd.displayNumbers(deviceType, duration);
 	}
 
 }
