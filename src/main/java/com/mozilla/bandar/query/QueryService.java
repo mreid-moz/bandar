@@ -1,5 +1,7 @@
 package com.mozilla.bandar.query;
 
+//http://localhost:8080/dnt?device=DESKTOP&duration=DAILY&geo=AGGREGATE
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,10 +55,13 @@ public class QueryService extends Service<QueryConfiguration> {
     }
     
     private void loadDntData(QueryConfiguration configuration) {
-    	d.readData(Constants.DESKTOP, Constants.DAILY, configuration.getDataPath());
-    	d.readData(Constants.DESKTOP, Constants.WEEKLY, configuration.getDataPath());
-    	d.readData(Constants.MOBILE, Constants.DAILY, configuration.getDataPath());
-    	d.readData(Constants.MOBILE, Constants.WEEKLY, configuration.getDataPath());
+    	d.readData(Constants.DESKTOP, Constants.DAILY, Constants.GEO_AGGREGATE, configuration.getDataPath());
+    	d.readData(Constants.DESKTOP, Constants.WEEKLY, Constants.GEO_AGGREGATE, configuration.getDataPath());
+    	d.readData(Constants.MOBILE, Constants.DAILY, Constants.GEO_AGGREGATE, configuration.getDataPath());
+    	d.readData(Constants.MOBILE, Constants.WEEKLY, Constants.GEO_AGGREGATE, configuration.getDataPath());
 
+    	d.readData(Constants.DESKTOP, Constants.DAILY, Constants.GEO_US_STATES, configuration.getDataPath());
+
+    	
     }
 }

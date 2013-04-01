@@ -1,11 +1,17 @@
 package com.mozilla.bandar.dnt;
 
 import java.io.BufferedReader;
+
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,16 +20,25 @@ import org.slf4j.LoggerFactory;
 
 import com.mozilla.bandar.constant.Constants;
 import com.mozilla.bandar.enumeration.DeviceType;
+import com.mozilla.bandar.enumeration.GeoType;
 import com.mozilla.bandar.enumeration.TimeFrame;
+
+import org.apache.commons.collections.MultiHashMap;
+import org.apache.commons.collections.keyvalue.MultiKey;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class Data {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Data.class);
 	private String deviceType;
 	private String intervalCode;
-	private Map<String, String> dailyDesktopNumbers = new LinkedHashMap<String, String>();
-	private Map<String, String> weeklyDesktopNumbers = new LinkedHashMap<String, String>();
-	private Map<String, String> dailyMobileNumbers = new LinkedHashMap<String, String>();
-	private Map<String, String> weeklyMobileNumbers = new LinkedHashMap<String, String>();
+	private LinkedHashMap<String, LinkedHashMap<String, String>> dailyDesktopNumbers = new LinkedHashMap<String, LinkedHashMap<String, String>>();
+	private LinkedHashMap<String, LinkedHashMap<String, String>> weeklyDesktopNumbers = new LinkedHashMap<String, LinkedHashMap<String, String>>();
+	private LinkedHashMap<String, LinkedHashMap<String, String>> dailyMobileNumbers = new LinkedHashMap<String, LinkedHashMap<String, String>>();
+	private LinkedHashMap<String, LinkedHashMap<String, String>> weeklyMobileNumbers = new LinkedHashMap<String, LinkedHashMap<String, String>>();
+	private LinkedHashMap<String, LinkedHashMap<String, String>> dailyUSDesktopNumbers = new LinkedHashMap<String, LinkedHashMap<String, String>>();
+
 	
 	private String jsonData;
 
@@ -34,25 +49,36 @@ public class Data {
 
 	}
 
-	public void readData(String deviceType, String intervalCode, String baseFilePath) {
+	public void readData(String deviceType, String intervalCode, String geo, String baseFilePath) {
 		if (TimeFrame.valueOf(intervalCode).equals(TimeFrame.DAILY)) {
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.DESKTOP)) {
-				LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode);
-				this.dailyDesktopNumbers = readDntNumbers(baseFilePath + Constants.DNT_DESKTOP_DAILY_FILE);
+				if (GeoType.valueOf(geo).equals(GeoType.AGGREGATE)) {
+					LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode + " GeoType: " + geo);
+					this.dailyDesktopNumbers = readDntNumbers(baseFilePath + Constants.DNT_DESKTOP_AGGREGATE_DAILY_FILE);
+				}
+				if (GeoType.valueOf(geo).equals(GeoType.US_STATES)) {
+					LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode + " GeoType: " + geo);
+					//this.dailyUSDesktopNumbers = readDntNumbers(baseFilePath + Constants.DNT_DESKTOP_AGGREGATE_DAILY_FILE);
+				}
+				
+				
+				
 			}
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.MOBILE)) {
-				LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode);
-				this.dailyMobileNumbers = readDntNumbers(baseFilePath + Constants.DNT_MOBILE_DAILY_FILE);
+				if (GeoType.valueOf(geo).equals(GeoType.AGGREGATE)) {
+					LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode);
+					this.dailyMobileNumbers = readDntNumbers(baseFilePath + Constants.DNT_MOBILE_AGGREGATE_DAILY_FILE);
+				}
 			}
 		}
 		if (TimeFrame.valueOf(intervalCode).equals(TimeFrame.WEEKLY)) {
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.DESKTOP)) {
 				LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode);
-				this.weeklyDesktopNumbers = readDntNumbers(baseFilePath + Constants.DNT_DESKTOP_WEEKLY_FILE);
+				this.weeklyDesktopNumbers = readDntNumbers(baseFilePath + Constants.DNT_DESKTOP_AGGREGATE_WEEKLY_FILE);
 			}
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.DESKTOP)) {
 				LOGGER.debug("Loading data for deviceType: " + deviceType + " TimeFrame: " + intervalCode);
-				this.weeklyMobileNumbers = readDntNumbers(baseFilePath + Constants.DNT_MOBILE_WEEKLY_FILE);
+				this.weeklyMobileNumbers = readDntNumbers(baseFilePath + Constants.DNT_MOBILE_AGGREGATE_WEEKLY_FILE);
 			}
 		}
 
@@ -61,43 +87,69 @@ public class Data {
 
 	@SuppressWarnings("unchecked")
 	public String displayNumbers(String deviceType, String intervalCode) {
-		JSONArray data_list = new JSONArray();
-		JSONObject obj;
-		Map<String, String> numbers = new LinkedHashMap<String, String>();
-		
+		Map<String, LinkedHashMap<String, String>> numbers = new LinkedHashMap<String, LinkedHashMap<String, String>>();
+
 		if (TimeFrame.valueOf(intervalCode).equals(TimeFrame.DAILY)) {
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.DESKTOP)) {
 				//lets shallow copy for outputting data
-				numbers = new LinkedHashMap<String, String>(dailyDesktopNumbers); 
+				numbers = new LinkedHashMap<String, LinkedHashMap<String, String>>(dailyDesktopNumbers); 
 			}
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.MOBILE)) {
 				//lets shallow copy for outputting data
-				numbers = new LinkedHashMap<String, String>(dailyMobileNumbers); 
+				numbers = new LinkedHashMap<String, LinkedHashMap<String, String>>(dailyMobileNumbers); 
 			}
 		}
 		if (TimeFrame.valueOf(intervalCode).equals(TimeFrame.WEEKLY)) {
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.DESKTOP)) {
 				//lets shallow copy for outputting data
-				numbers = new LinkedHashMap<String, String>(weeklyDesktopNumbers); 
+				numbers = new LinkedHashMap<String, LinkedHashMap<String, String>>(weeklyDesktopNumbers); 
 			}
 			if (DeviceType.valueOf(deviceType).equals(DeviceType.MOBILE)) {
 				//lets shallow copy for outputting data
-				numbers = new LinkedHashMap<String, String>(weeklyMobileNumbers); 
+				numbers = new LinkedHashMap<String, LinkedHashMap<String, String>>(weeklyMobileNumbers); 
+			}
+
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		List<Object> list = new ArrayList<Object>();
+
+		Map<String, Object> userInMap = new HashMap<String, Object>();
+
+		Map<String, Object> boo = new HashMap<String, Object>();
+		
+		for (Entry<String, LinkedHashMap<String, String>> dd : numbers.entrySet()) {
+			String p = dd.getKey();
+			System.out.println("DAA: " + p);
+			list = new ArrayList<Object>();
+			for (Entry<String, String> d : dd.getValue().entrySet()) {
+				boo = new HashMap<String, Object>();				
+				boo.put("date", d.getKey());
+				boo.put("perc", d.getValue());
+				list.add(boo);
 			}
 			
+			userInMap.put(p, list);
+
+			
 		}
-		
-		for (Map.Entry<String, String> d : numbers.entrySet()) {
-			obj  = new JSONObject();;
-			obj.put(Constants.JSON_DNT_KEY_DATE, d.getKey());
-			obj.put(Constants.JSON_DNT_KEY_PERCENTAGE, d.getValue());
-			data_list.add(obj);
+
+		try {
+			return mapper.writeValueAsString(userInMap);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		return data_list.toJSONString();
+		return "ERROR";
 	}
 
-	private LinkedHashMap<String, String> readDntNumbers(String filePath) {
+	private LinkedHashMap<String, LinkedHashMap<String, String>> readDntNumbers(String filePath) {
 		return readDataFromFile(filePath);
 	}
 
@@ -109,14 +161,6 @@ public class Data {
 		this.deviceType = deviceType;
 	}
 
-	public Map<String, String> getDailyDesktopNumbers() {
-		return dailyDesktopNumbers;
-	}
-
-	public void setDailyDesktopNumbers(Map<String, String> dailyDesktopNumbers) {
-		this.dailyDesktopNumbers = dailyDesktopNumbers;
-	}
-
 	public String getJsonData() {
 		return jsonData;
 	}
@@ -126,8 +170,9 @@ public class Data {
 	}
 
 
-	protected LinkedHashMap<String, String> readDataFromFile(String filePath) {
-		LinkedHashMap<String, String> dailyDNT = new LinkedHashMap<String, String>();
+	protected LinkedHashMap<String, LinkedHashMap<String, String>> readDataFromFile(String filePath) {
+		LinkedHashMap<String, LinkedHashMap<String, String>> data = new LinkedHashMap<String, LinkedHashMap<String,String>>();
+		
 		try{
 			// Open the file that is the first 
 			FileInputStream fstream = new FileInputStream(filePath);
@@ -138,16 +183,21 @@ public class Data {
 			//Read File Line By Line
 			while ((strLine = br.readLine()) != null)   {
 				String[] splitTab = strLine.split("\t");
-				dailyDNT.put(splitTab[0], splitTab[1]);
+				LinkedHashMap<String, String> d = new LinkedHashMap<String, String>();
+				if (data.containsKey(splitTab[1])) {
+					d = data.get(splitTab[1]);
+				}
+				d.put(splitTab[0], splitTab[2]);
+				data.put(splitTab[1], d);
 			}
 			//Close the input stream
 			in.close();
 		}catch (Exception e){//Catch exception if any
-			LOGGER.error("Unable to read daily file", e.getMessage());
+			LOGGER.error("Error reading file: " + filePath);
 		}
 
 
-		return dailyDNT;
+		return data;
 	}
 
 	public String getIntervalCode() {

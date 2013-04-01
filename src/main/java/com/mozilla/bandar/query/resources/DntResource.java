@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.mozilla.bandar.constant.Constants;
 import com.mozilla.bandar.dnt.Data;
 import com.mozilla.bandar.enumeration.DeviceType;
+import com.mozilla.bandar.enumeration.GeoType;
 import com.mozilla.bandar.enumeration.TimeFrame;
 import com.mozilla.bandar.json.ErrorJson;
 
@@ -30,7 +31,7 @@ public class DntResource {
 	// This method is called if TEXT_PLAIN is request
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getAggreggateInstallData(@QueryParam("device") String deviceType, @QueryParam("duration") String duration) {
+	public String getAggreggateInstallData(@QueryParam("device") String deviceType, @QueryParam("duration") String duration, @QueryParam("geo") String geo) {
 		
 		if (!EnumUtils.isValidEnum(DeviceType.class, deviceType)) {
 			LOGGER.error("invalid param for device: " + deviceType);
@@ -41,6 +42,13 @@ public class DntResource {
 			return ej.invalidArgumentResponse("duration", duration, Constants.MESSAGE_ERROR_INVALID_ARGUMENT);
 			
 		}
+
+		if (!EnumUtils.isValidEnum(GeoType.class, geo)) {
+			LOGGER.error("invalid param for geo: " + geo);
+			return ej.invalidArgumentResponse("geo", geo, Constants.MESSAGE_ERROR_INVALID_ARGUMENT);
+			
+		}
+
 		
 		return dddd.displayNumbers(deviceType, duration);
 	}
