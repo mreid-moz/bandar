@@ -50,7 +50,7 @@ public class DntResource {
 		}
 
 		
-		return dddd.displayNumbers(deviceType, duration);
+		return dddd.displayNumbers(deviceType, duration, geo);
 	}
 
 }

@@ -79,20 +79,6 @@ public class QuickTest {
 
 			
 		}
-		
-//
-//		boo.put("name", "mkyong");
-//		boo.put("age", 29);
-//		list.add(boo);
-//		
-//		boo = new HashMap<String, Object>();
-//		boo.put("name", "jim");
-//		boo.put("age", 39);		
-//		list.add(boo);
-//
-//		userInMap.put("GLOBAL", list);
-//		userInMap.put("US", list);
-//
 
 		try {
 			System.err.println(mapper.writeValueAsString(userInMap));

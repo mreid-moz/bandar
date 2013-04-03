@@ -61,6 +61,9 @@ public class QueryService extends Service<QueryConfiguration> {
     	d.readData(Constants.MOBILE, Constants.WEEKLY, Constants.GEO_AGGREGATE, configuration.getDataPath());
 
     	d.readData(Constants.DESKTOP, Constants.DAILY, Constants.GEO_US_STATES, configuration.getDataPath());
+    	d.readData(Constants.DESKTOP, Constants.WEEKLY, Constants.GEO_US_STATES, configuration.getDataPath());
+    	d.readData(Constants.MOBILE, Constants.DAILY, Constants.GEO_US_STATES, configuration.getDataPath());
+    	d.readData(Constants.MOBILE, Constants.WEEKLY, Constants.GEO_US_STATES, configuration.getDataPath());
 
     	
     }

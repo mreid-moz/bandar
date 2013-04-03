@@ -10,7 +10,7 @@ public class TestData {
     public void test() {
     	Data data = new Data();
     	data.readData("DESKTOP", "DAILY", "AGGREGATE", "data/");
-    	String jsonData = data.displayNumbers("DESKTOP", "DAILY");
+    	String jsonData = data.displayNumbers("DESKTOP", "DAILY", "AGGREGATE");
         System.err.println("data: " + jsonData);
         assertNotNull(jsonData);
     }
