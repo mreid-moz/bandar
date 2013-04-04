@@ -120,7 +120,7 @@ public class Data {
 			String strLine;
 			//Read File Line By Line
 			while ((strLine = br.readLine()) != null)   {
-				String[] splitTab = strLine.split("\t");
+				String[] splitTab = strLine.replaceAll("\\p{Cntrl}", "\t").split("\t");
 				LinkedHashMap<String, String> d = new LinkedHashMap<String, String>();
 				if (data.containsKey(splitTab[1])) {
 					d = data.get(splitTab[1]);
