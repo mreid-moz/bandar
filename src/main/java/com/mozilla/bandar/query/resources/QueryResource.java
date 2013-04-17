@@ -16,7 +16,7 @@ import com.mozilla.bandar.query.core.QueryList;
 import com.mozilla.bandar.query.core.QueryProvider;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/query")
+@Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 public class QueryResource {
     private final List<QueryProvider> providers;

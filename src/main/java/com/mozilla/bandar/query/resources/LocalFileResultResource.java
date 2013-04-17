@@ -15,7 +15,7 @@ import com.mozilla.bandar.query.core.LocalFileResult;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/query/file/{name}")
+@Path("/file/{name}")
 @Produces(MediaType.TEXT_PLAIN)
 public class LocalFileResultResource {
     private final LocalFileProvider provider;

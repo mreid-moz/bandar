@@ -18,7 +18,7 @@ import com.mozilla.bandar.query.core.CdaResult;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/query/cda")
+@Path("/cda")
 public class CdaResource {
     Logger logger = LoggerFactory.getLogger(CdaResource.class);
     private final CdaCoreService coreService;
