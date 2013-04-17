@@ -1,1 +1,4 @@
 basePath: /tmp/bandar
+cdaPaths:
+   sample: /home/mark/mozilla/github/bandar/src/test/resources/cda
+   fhr: /home/mark/mozilla/github/bandar/src/test/resources/fhr

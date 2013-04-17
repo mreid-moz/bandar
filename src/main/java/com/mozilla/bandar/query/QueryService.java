@@ -3,6 +3,7 @@ package com.mozilla.bandar.query;
 import com.mozilla.bandar.health.BaseDirHealthCheck;
 import com.mozilla.bandar.query.core.HDFSProvider;
 import com.mozilla.bandar.query.core.LocalFileProvider;
+import com.mozilla.bandar.query.resources.CdaResource;
 import com.mozilla.bandar.query.resources.LocalFileResource;
 import com.mozilla.bandar.query.resources.LocalFileResultResource;
 import com.mozilla.bandar.query.resources.QueryResource;
@@ -30,6 +31,8 @@ public class QueryService extends Service<QueryConfiguration> {
         environment.addResource(new QueryResource(localFileProvider, hdfsProvider));
         environment.addResource(new LocalFileResource(localFileProvider));
         environment.addResource(new LocalFileResultResource(localFileProvider));
+//        environment.addResource(new RestEndpoint());
+        environment.addResource(new CdaResource(configuration.getCdaPaths()));
         environment.addHealthCheck(new BaseDirHealthCheck(basePath));
     }
 
