@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>pentaho-kettle</groupId>
+  <artifactId>kettle-engine</artifactId>
+  <versioning>
+    <release>4.4.0.1-MARK</release>
+    <versions>
+      <version>4.4.0.1-MARK</version>
+    </versions>
+    <lastUpdated>20130418140451</lastUpdated>
+  </versioning>
+</metadata>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>pentaho</groupId>
+  <artifactId>cpf-core</artifactId>
+  <version>TRUNK-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20130418140831</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>TRUNK-SNAPSHOT</value>
+        <updated>20130418140831</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>TRUNK-SNAPSHOT</value>
+        <updated>20130418140831</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
