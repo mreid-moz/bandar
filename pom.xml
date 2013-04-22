@@ -15,42 +15,26 @@
       <url>file:///home/mark/mozilla/github/bandar/repository</url>
     </repository>
     <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>central</id>
-      <name>repo</name>
-      <url>http://repository.pentaho.org/artifactory/repo</url>
-    </repository>
-    <repository>
-      <snapshots />
-      <id>snapshots</id>
-      <name>repo</name>
-      <url>http://repository.pentaho.org/artifactory/repo</url>
-    </repository>
-    <repository>
       <snapshots />
       <id>repo1</id>
       <name>repo1</name>
       <url>http://repo1.maven.org/maven2</url>
     </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
+    <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>central</id>
       <name>repo</name>
       <url>http://repository.pentaho.org/artifactory/repo</url>
-    </pluginRepository>
-    <pluginRepository>
+    </repository>
+    <repository>
       <snapshots />
       <id>snapshots</id>
       <name>repo</name>
       <url>http://repository.pentaho.org/artifactory/repo</url>
-    </pluginRepository>
-  </pluginRepositories>
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
@@ -156,6 +140,36 @@
       <groupId>pentaho</groupId>
       <artifactId>pentaho-metadata</artifactId>
       <version>3.4.6</version>
+      <exclusions>
+         <exclusion>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-javamail_1.4_spec</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-activation_1.1_spec</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3_min</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.netbeans</groupId>
+            <artifactId>mof</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xmlParserAPIs</artifactId>
+         </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>pentaho-reporting-engine</groupId>
@@ -211,11 +225,31 @@
       <groupId>dom4j</groupId>
       <artifactId>dom4j</artifactId>
       <version>1.6.1</version>
+      <exclusions>
+         <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+         </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>jaxen</groupId>
       <artifactId>jaxen</artifactId>
       <version>1.1</version>
+      <exclusions>
+         <exclusion>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-javamail_1.4_spec</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xmlParserAPIs</artifactId>
+         </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>pentaho-kettle</groupId>
@@ -254,6 +288,11 @@
       <version>0.9.6</version>
     </dependency>
 
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.8.1</version>
+    </dependency>
   </dependencies>
 
   <properties>
