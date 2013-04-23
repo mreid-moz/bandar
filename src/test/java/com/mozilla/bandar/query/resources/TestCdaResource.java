@@ -13,10 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 
 import org.dom4j.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +36,10 @@ import pt.webdetails.cda.settings.CdaSettings;
 import pt.webdetails.cda.settings.SettingsManager;
 import pt.webdetails.cda.settings.UnknownDataAccessException;
 
+import com.mozilla.bandar.query.core.CdaParams;
 import com.mozilla.bandar.query.core.CdaResult;
 import com.mozilla.bandar.query.core.LocalFileProvider;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class TestCdaResource {
     String cdaName = "sample";
@@ -50,16 +55,21 @@ public class TestCdaResource {
     }
 
     @Test
-    public void test() throws WebApplicationException, IOException {
+    public void testCdaResult() throws WebApplicationException, IOException {
         CdaResource cdaResource = new CdaResource();
         List<String> types = Arrays.asList("json", "xml", "html", "csv");
+        MultivaluedMap<String,String> params = new MultivaluedMapImpl();
+        params.add("fooFilter", "Hello");
+        params.add("barFilter", "20");
+        UriInfo ui = Mockito.mock(UriInfo.class);
+        Mockito.when(ui.getQueryParameters()).thenReturn(params);
         for (String type : types)
         {
             CdaResult result;
             if ("json".equals(type))
-                result = cdaResource.getJson(cdaFile);
+                result = cdaResource.getJson(cdaFile, ui);
             else
-                result = cdaResource.getByType(cdaFile, type);
+                result = cdaResource.getByType(cdaFile, type, ui);
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             result.write(output);
@@ -70,6 +80,23 @@ public class TestCdaResource {
             assertTrue(nice.length() > 0);
 
         }
+    }
+
+    @Test
+    public void testCdaParams() throws WebApplicationException, IOException {
+        CdaResource cdaResource = new CdaResource();
+
+        CdaParams result;
+        result = cdaResource.getParameters(cdaFile);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        result.write(output);
+
+        String nice = output.toString("UTF-8");
+        System.err.println("Found these parameters for " + cdaFile + ":");
+        System.err.println(nice);
+        assertTrue(nice.length() > 0);
+
     }
 
 //    @Test

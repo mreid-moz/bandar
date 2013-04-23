@@ -11,8 +11,8 @@
     <DataSources>
       <Connection id="1" type="kettle.TransFromFile">
          <KtrFile>/home/mark/mozilla/github/bandar/src/test/resources/cda/generate-rows.ktr</KtrFile>
-        <variables datarow-name="myRadius"/>
-        <variables datarow-name="ZipCode" variable-name="myZip"/>
+        <variables datarow-name="fooFilter"/>
+        <variables datarow-name="barFilter"/>
       </Connection>
     </DataSources>
     <!-- DataAccess object controls the query itself
@@ -22,11 +22,11 @@
 
 	-->
   <DataAccess id="2" connection="1" type="kettle" access="public">
-		<Name>Sample query on SteelWheelsSales</Name>
+		<Name>Sample Kettle Query</Name>
         <Query><![CDATA[Output]]></Query>
         <Parameters>
-          <Parameter name="myRadius" type="Integer" default="30"/>
-          <Parameter name="ZipCode" type="Integer" default="32771"/>
+          <Parameter name="fooFilter" type="String" default="FILTER"/>
+          <Parameter name="barFilter" type="Integer" default="30"/>
         </Parameters>
     </DataAccess>
 </CDADescriptor>

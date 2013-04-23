@@ -2,8 +2,11 @@ package com.mozilla.bandar.query.core;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Map.Entry;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.lang.StringUtils;
@@ -29,10 +32,12 @@ public class CdaResult implements StreamingOutput {
     Logger logger = LoggerFactory.getLogger(CdaResult.class);
     private String cdaFile;
     private String outputType;
+    private MultivaluedMap<String, String> queryParams;
 
-    public CdaResult(String cdaFile, String outputType) {
+    public CdaResult(String cdaFile, String outputType, MultivaluedMap<String, String> queryParams) {
         this.cdaFile = cdaFile;
         this.outputType = outputType;
+        this.queryParams = queryParams;
     }
 
     @Override
@@ -56,6 +61,20 @@ public class CdaResult implements StreamingOutput {
 
             final CdaSettings cdaSettings = SettingsManager.getInstance().parseSettingsFile(cdaFile + ".cda");
 
+            for (Entry<String, List<String>> param : queryParams.entrySet()) {
+                String key = param.getKey();
+                List<String> value = param.getValue();
+                if (value != null) {
+                    if (value.size() == 1) {
+                        queryOptions.addParameter(key, value.get(0));
+                    } else if (value.size() > 1) {
+                        queryOptions.addParameter(key, value);
+                    } else {
+                        // Empty list
+                        queryOptions.addParameter(key, null);
+                    }
+                }
+            }
 
             // Handle the query itself and its output format...
             queryOptions.setOutputType(outputType);
