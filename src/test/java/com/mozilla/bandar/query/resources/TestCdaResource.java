@@ -50,7 +50,7 @@ public class TestCdaResource {
     @Test
     public void test() throws WebApplicationException, IOException {
         CdaResource cdaResource = new CdaResource(cdaPathMap);
-        List<String> types = Arrays.asList("json", "xml", "html"); //, "csv");
+        List<String> types = Arrays.asList("json", "xml", "html", "csv");
         for (String type : types)
         {
             CdaResult result;
