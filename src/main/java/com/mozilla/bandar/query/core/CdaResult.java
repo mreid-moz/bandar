@@ -59,7 +59,7 @@ public class CdaResult implements StreamingOutput {
 
             queryOptions.setDataAccessId("2");
 
-            final CdaSettings cdaSettings = SettingsManager.getInstance().parseSettingsFile(path + "/" + cdaFile + ".cda");
+            final CdaSettings cdaSettings = SettingsManager.getInstance().parseSettingsFile(cdaFile + ".cda");
 
 
             // Handle the query itself and its output format...
