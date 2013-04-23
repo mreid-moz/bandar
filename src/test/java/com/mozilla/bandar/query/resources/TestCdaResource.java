@@ -51,15 +51,15 @@ public class TestCdaResource {
 
     @Test
     public void test() throws WebApplicationException, IOException {
-        CdaResource cdaResource = new CdaResource(cdaPathMap);
+        CdaResource cdaResource = new CdaResource();
         List<String> types = Arrays.asList("json", "xml", "html", "csv");
         for (String type : types)
         {
             CdaResult result;
             if ("json".equals(type))
-                result = cdaResource.getJson(cdaName, cdaFile);
+                result = cdaResource.getJson(cdaFile);
             else
-                result = cdaResource.getByType(cdaName, cdaFile, type);
+                result = cdaResource.getByType(cdaFile, type);
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             result.write(output);

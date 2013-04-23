@@ -11,7 +11,6 @@ import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.webdetails.cda.CdaCoreService;
 import pt.webdetails.cda.CdaEngine;
 import pt.webdetails.cda.connections.UnsupportedConnectionException;
 import pt.webdetails.cda.dataaccess.QueryException;
@@ -28,14 +27,10 @@ import pt.webdetails.cpf.utils.Utils;
 
 public class CdaResult implements StreamingOutput {
     Logger logger = LoggerFactory.getLogger(CdaResult.class);
-    private final CdaCoreService coreService;
-    private String path;
     private String cdaFile;
     private String outputType;
 
-    public CdaResult(CdaCoreService coreService, String path, String cdaFile, String outputType) {
-        this.coreService = coreService;
-        this.path = path;
+    public CdaResult(String cdaFile, String outputType) {
         this.cdaFile = cdaFile;
         this.outputType = outputType;
     }

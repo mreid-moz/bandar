@@ -32,7 +32,7 @@ public class QueryService extends Service<QueryConfiguration> {
         environment.addResource(new LocalFileResource(localFileProvider));
         environment.addResource(new LocalFileResultResource(localFileProvider));
 //        environment.addResource(new RestEndpoint());
-        environment.addResource(new CdaResource(configuration.getCdaPaths()));
+        environment.addResource(new CdaResource());
         environment.addHealthCheck(new BaseDirHealthCheck(basePath));
     }
 
