@@ -1,5 +1,7 @@
 package com.mozilla.bandar.query.resources;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +67,7 @@ public class TestCdaResource {
             String nice = output.toString("UTF-8");
             System.err.println("Found " + nice.length() + " characters for type " + type + ":");
             System.err.println(nice);
+            assertTrue(nice.length() > 0);
 
         }
     }
