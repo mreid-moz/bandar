@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
 import org.dom4j.DocumentException;
@@ -36,8 +37,6 @@ import pt.webdetails.cda.settings.CdaSettings;
 import pt.webdetails.cda.settings.SettingsManager;
 import pt.webdetails.cda.settings.UnknownDataAccessException;
 
-import com.mozilla.bandar.query.core.CdaParams;
-import com.mozilla.bandar.query.core.CdaResult;
 import com.mozilla.bandar.query.core.LocalFileProvider;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
@@ -65,7 +64,7 @@ public class TestCdaResource {
         Mockito.when(ui.getQueryParameters()).thenReturn(params);
         for (String type : types)
         {
-            CdaResult result;
+            StreamingOutput result;
             if ("json".equals(type))
                 result = cdaResource.getJson(cdaFile, ui);
             else
@@ -86,7 +85,7 @@ public class TestCdaResource {
     public void testCdaParams() throws WebApplicationException, IOException {
         CdaResource cdaResource = new CdaResource();
 
-        CdaParams result;
+        StreamingOutput result;
         result = cdaResource.getParameters(cdaFile);
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
