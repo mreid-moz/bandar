@@ -14,8 +14,8 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mozilla.bandar.query.core.CdaParams;
-import com.mozilla.bandar.query.core.CdaQueries;
+import com.mozilla.bandar.query.core.CdaParameterList;
+import com.mozilla.bandar.query.core.CdaQueryList;
 import com.mozilla.bandar.query.core.CdaResult;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
@@ -33,7 +33,7 @@ public class CdaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public StreamingOutput getJson(@PathParam("cdafile") String cdaFile, @Context UriInfo ui) {
-        logger.info("getJson");
+//        logger.info("getJson");
         return getByType(cdaFile, "json", ui);
     }
 
@@ -43,7 +43,7 @@ public class CdaResource {
     @Produces(MediaType.APPLICATION_XML)
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public StreamingOutput getXml(@PathParam("cdafile") String cdaFile, @Context UriInfo ui) {
-        logger.info("getXml");
+//        logger.info("getXml");
         return getByType(cdaFile, "xml", ui);
     }
 
@@ -52,7 +52,7 @@ public class CdaResource {
     @Timed
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public StreamingOutput getByType(@PathParam("cdafile") String cdaFile, @PathParam("outType") String outType, @Context UriInfo ui) {
-        logger.info("getByType");
+//        logger.info("getByType");
         return new CdaResult(cdaFile, outType, ui.getQueryParameters());
     }
 
@@ -63,14 +63,14 @@ public class CdaResource {
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public StreamingOutput getParameters(@PathParam("cdafile") String cdaFile) {
         // TODO: /{cdafile}/parameters.{outType}?
-        return new CdaParams(cdaFile);
+        return new CdaParameterList(cdaFile);
     }
     @GET
     @Path("/{cdafile}/queries")
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public StreamingOutput getQueries(@PathParam("cdafile") String cdaFile) {
-        return new CdaQueries(cdaFile);
+        return new CdaQueryList(cdaFile);
     }
 
 }
