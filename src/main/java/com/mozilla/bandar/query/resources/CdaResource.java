@@ -14,6 +14,7 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mozilla.bandar.query.core.CdaFileList;
 import com.mozilla.bandar.query.core.CdaParameterList;
 import com.mozilla.bandar.query.core.CdaQueryList;
 import com.mozilla.bandar.query.core.CdaResult;
@@ -73,4 +74,22 @@ public class CdaResource {
         return new CdaQueryList(cdaFile);
     }
 
+    // TODO: do we need these?
+    //  - wrap/unwrap
+    //  - getCdaFile
+    //  - writeCdaFile
+    //  - clearCache / cacheMonitor / cacheController / manageCache (Task?)
+    //  - editFile
+    //  - previewQuery
+    //  - getCssResource
+    //  - getJsResource
+    //  - listDataAccessTypes
+
+    @GET
+    @Path("/")
+    @Timed
+    @Produces(MediaType.APPLICATION_JSON)
+    public StreamingOutput getCdaFiles() {
+        return new CdaFileList();
+    }
 }

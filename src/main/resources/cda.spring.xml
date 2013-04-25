@@ -19,7 +19,7 @@ http://jax-ws.dev.java.net/spring/servlet http://jax-ws.dev.java.net/spring/serv
    <bean id="IResourceKeyGetter" class="pt.webdetails.cda.settings.DefaultResourceKeyGetter" scope="prototype"/>
   <bean id="IMondrianRoleMapper" class="pt.webdetails.cda.connections.mondrian.JdbcConnection" scope="prototype"/>      
   <bean id="IQueryCache" class="pt.webdetails.cda.cache.EHCacheQueryCache" scope="prototype"/>
-  <!--  id="ISessionUtils" class="pt.webdetails.cpf.session.PentahoSessionUtils" scope="prototype"/> -->
+  <bean id="ISessionUtils" class="pt.webdetails.cpf.impl.SimpleSessionUtils" scope="prototype"/>
   <bean id="IRepositoryAccess" class="pt.webdetails.cpf.repository.VfsRepositoryAccess" scope="prototype">
      <property name="repository" value="file:///home/mark/mozilla/github/bandar/src/test/resources/cda/repo"/>
      <property name="settings" value="file:///home/mark/mozilla/github/bandar/src/test/resources/cda/settings"/>

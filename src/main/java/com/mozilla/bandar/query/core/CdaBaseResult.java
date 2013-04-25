@@ -32,7 +32,9 @@ public abstract class CdaBaseResult implements StreamingOutput {
 
         try {
             final CdaEngine engine = CdaEngine.getInstance();
-            final CdaSettings cdaSettings = SettingsManager.getInstance().parseSettingsFile(cdaFile + ".cda");
+            CdaSettings cdaSettings = null;
+            if (cdaFile != null)
+                cdaSettings = SettingsManager.getInstance().parseSettingsFile(cdaFile + ".cda");
             writeCdaResult(engine, cdaSettings, outputStream);
             causedException = false;
         } catch (UnknownDataAccessException e) {
