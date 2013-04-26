@@ -12,7 +12,7 @@
       <snapshots />
       <id>bandar-local</id>
       <name>bandar-local</name>
-      <url>${project.basedir}/repository</url>
+      <url>file://${project.basedir}/repository</url>
     </repository>
     <repository>
       <snapshots />
