@@ -1,12 +1,11 @@
 package com.mozilla.bandar.query.resources;
 
+import static com.yammer.dropwizard.testing.JsonHelpers.fromJson;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -17,26 +16,13 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
-import org.dom4j.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.webdetails.cda.CdaEngine;
-import pt.webdetails.cda.connections.UnsupportedConnectionException;
-import pt.webdetails.cda.dataaccess.QueryException;
-import pt.webdetails.cda.dataaccess.UnsupportedDataAccessException;
-import pt.webdetails.cda.discovery.DiscoveryOptions;
-import pt.webdetails.cda.exporter.CsvExporter;
-import pt.webdetails.cda.exporter.ExporterException;
-import pt.webdetails.cda.exporter.UnsupportedExporterException;
-import pt.webdetails.cda.query.QueryOptions;
-import pt.webdetails.cda.settings.CdaSettings;
-import pt.webdetails.cda.settings.SettingsManager;
-import pt.webdetails.cda.settings.UnknownDataAccessException;
-
+import com.mozilla.bandar.api.CdaResponse;
 import com.mozilla.bandar.query.core.LocalFileProvider;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
@@ -77,7 +63,10 @@ public class TestCdaResource {
             System.err.println("Found " + nice.length() + " characters for type " + type + ":");
             System.err.println(nice);
             assertTrue(nice.length() > 0);
-
+            if ("json".equals(type)) {
+                CdaResponse response = fromJson(nice, CdaResponse.class);
+                assertTrue(response.getResultset().size() > 0);
+            }
         }
     }
 
@@ -95,74 +84,41 @@ public class TestCdaResource {
         System.err.println("Found these parameters for " + cdaFile + ":");
         System.err.println(nice);
         assertTrue(nice.length() > 0);
-
+        CdaResponse response = fromJson(nice, CdaResponse.class);
+        assertEquals(2, response.getResultset().size());
     }
 
-//    @Test
-    public void test2() throws URISyntaxException, DocumentException, UnsupportedConnectionException, UnsupportedDataAccessException, UnknownDataAccessException, QueryException, UnsupportedExporterException, ExporterException {
+    @Test
+    public void testCdaQueries() throws WebApplicationException, IOException {
+        CdaResource cdaResource = new CdaResource();
 
-        // Define an outputStream
-        OutputStream out = System.out;
+        StreamingOutput result;
+        result = cdaResource.getQueries(cdaFile);
 
-        logger.info("Building CDA settings from sample file");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        result.write(output);
 
-        final SettingsManager settingsManager = SettingsManager.getInstance();
-        File settingsFile = new File(cdaPath + "/sample-sql.cda");
-        final CdaSettings cdaSettings = settingsManager.parseSettingsFile(settingsFile.getAbsolutePath());
-        logger.debug("Doing query on Cda - Initializing CdaEngine");
-        final CdaEngine engine = CdaEngine.getInstance();
-
-        QueryOptions queryOptions = new QueryOptions();
-        queryOptions.setDataAccessId("1");
-        queryOptions.addParameter("orderDate", "2003-04-01");
-        // queryOptions.addParameter("status","In Process");
-
-        logger.info("Doing csv export");
-        queryOptions.setOutputType("csv");
-        queryOptions.addSetting(CsvExporter.CSV_SEPARATOR_SETTING, ",");
-        engine.doQuery(out, cdaSettings, queryOptions);
-
-        logger.info("Doing xml export");
-        queryOptions.setOutputType("xml");
-        engine.doQuery(out, cdaSettings, queryOptions);
-
-        logger.info("Doing json export");
-        queryOptions.setOutputType("json");
-        engine.doQuery(out, cdaSettings, queryOptions);
-
-        logger.info("Doing xsl export");
-        queryOptions.setOutputType("xls");
-        engine.doQuery(out, cdaSettings, queryOptions);
+        String nice = output.toString("UTF-8");
+        System.err.println("Found these queries for " + cdaFile + ":");
+        System.err.println(nice);
+        assertTrue(nice.length() > 0);
     }
 
-//    @Test
-    public void test3() throws DocumentException, UnsupportedConnectionException, UnsupportedDataAccessException, UnknownDataAccessException, QueryException, UnsupportedExporterException, ExporterException {
+    @Test
+    public void testCdaFiles() throws WebApplicationException, IOException {
+        CdaResource cdaResource = new CdaResource();
 
-        // Define an outputStream
-        OutputStream out = System.out;
+        StreamingOutput result;
+        result = cdaResource.getCdaFiles();
 
-        logger.info("Building CDA settings from sample file");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        result.write(output);
 
-        final SettingsManager settingsManager = SettingsManager.getInstance();
-        File settingsFile = new File(cdaPath + "/sample-kettle.cda");
-        final CdaSettings cdaSettings = settingsManager.parseSettingsFile(settingsFile.getAbsolutePath());
-        logger.debug("Doing query on Cda - Initializing CdaEngine");
-        final CdaEngine engine = CdaEngine.getInstance();
-
-        final QueryOptions queryOptions = new QueryOptions();
-        queryOptions.setDataAccessId("2");
-        queryOptions.setOutputType("json");
-        queryOptions.addParameter("myRadius", "10");
-        queryOptions.addParameter("ZipCode", "90210");
-
-        final DiscoveryOptions discoveryOptions = new DiscoveryOptions();
-        discoveryOptions.setOutputType("json");
-        discoveryOptions.setDataAccessId("2");
-
-        engine.listParameters(out, cdaSettings, discoveryOptions);
-        engine.listQueries(out, cdaSettings, discoveryOptions);
-
-        logger.info("Doing query");
-        engine.doQuery(out, cdaSettings, queryOptions);
+        String nice = output.toString("UTF-8");
+        System.err.println("Found these files:");
+        System.err.println(nice);
+        assertTrue(nice.length() > 0);
+        CdaResponse response = fromJson(nice, CdaResponse.class);
+        assertTrue(response.getResultset().size() > 0);
     }
 }

@@ -1,0 +1,34 @@
+{
+  "metadata": [
+    {
+      "colName": "foo",
+      "colType": "String",
+      "colIndex": 0
+    },
+    {
+      "colName": "bar",
+      "colType": "Integer",
+      "colIndex": 1
+    },
+    {
+      "colName": "baz",
+      "colType": "Boolean",
+      "colIndex": 2
+    }
+  ],
+  "queryInfo": {
+    "totalRows": "2"
+  },
+  "resultset": [
+    [
+      "Hola",
+      30,
+      true
+    ],
+    [
+      "Where am I?",
+      40,
+      true
+    ]
+  ]
+}
