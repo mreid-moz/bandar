@@ -1,5 +1,6 @@
 package com.mozilla.bandar.query.resources;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.GET;
@@ -89,7 +90,7 @@ public class CdaResource {
     @Path("/")
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
-    public StreamingOutput getCdaFiles() {
-        return new CdaFileList();
+    public List<String> getCdaFiles() {
+        return new CdaFileList().get();
     }
 }

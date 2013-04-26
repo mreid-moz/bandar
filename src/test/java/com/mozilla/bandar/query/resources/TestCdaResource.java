@@ -114,17 +114,8 @@ public class TestCdaResource {
     public void testCdaFiles() throws WebApplicationException, IOException {
         CdaResource cdaResource = new CdaResource();
 
-        StreamingOutput result;
-        result = cdaResource.getCdaFiles();
-
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        result.write(output);
-
-        String nice = output.toString("UTF-8");
-        System.err.println("Found these files:");
-        System.err.println(nice);
-        assertTrue(nice.length() > 0);
-        CdaResponse response = fromJson(nice, CdaResponse.class);
-        assertTrue(response.getResultset().size() > 0);
+        List<String> result = cdaResource.getCdaFiles();
+        assertTrue(result.size() > 0);
+        assertTrue(result.contains(cdaFile));
     }
 }
