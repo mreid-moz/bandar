@@ -65,7 +65,13 @@ public class TestCdaResource {
             assertTrue(nice.length() > 0);
             if ("json".equals(type)) {
                 CdaResponse response = fromJson(nice, CdaResponse.class);
-                assertTrue(response.getResultset().size() > 0);
+                assertTrue(response.getResultset().size() == 2);
+                assertEquals("Hola",        response.getResultset().get(0).get(0));
+                assertEquals(30,            response.getResultset().get(0).get(1));
+                assertEquals(Boolean.TRUE,  response.getResultset().get(0).get(2));
+                assertEquals("Where am I?", response.getResultset().get(1).get(0));
+                assertEquals(40,            response.getResultset().get(1).get(1));
+                assertEquals(Boolean.TRUE,  response.getResultset().get(1).get(2));
             }
         }
     }
