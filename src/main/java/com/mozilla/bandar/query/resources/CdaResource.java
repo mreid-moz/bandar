@@ -59,6 +59,15 @@ public class CdaResource {
     }
 
     @GET
+    @Path("/{cdafile}")
+    @Timed
+    @Produces(MediaType.APPLICATION_JSON)
+    @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
+    public StreamingOutput getDefault(@PathParam("cdafile") String cdaFile, @Context UriInfo ui) {
+        return getJson(cdaFile, ui);
+    }
+
+    @GET
     @Path("/{cdafile}/parameters")
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
