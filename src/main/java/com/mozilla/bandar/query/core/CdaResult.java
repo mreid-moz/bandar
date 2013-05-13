@@ -45,17 +45,19 @@ public class CdaResult extends CdaBaseResult {
         final QueryOptions queryOptions = new QueryOptions();
         queryOptions.setDataAccessId("2");
 
-        for (Entry<String, List<String>> param : queryParams.entrySet()) {
-            String key = param.getKey();
-            List<String> value = param.getValue();
-            if (value != null) {
-                if (value.size() == 1) {
-                    queryOptions.addParameter(key, value.get(0));
-                } else if (value.size() > 1) {
-                    queryOptions.addParameter(key, value);
-                } else {
-                    // Empty list
-                    queryOptions.addParameter(key, null);
+        if (queryParams != null) {
+            for (Entry<String, List<String>> param : queryParams.entrySet()) {
+                String key = param.getKey();
+                List<String> value = param.getValue();
+                if (value != null) {
+                    if (value.size() == 1) {
+                        queryOptions.addParameter(key, value.get(0));
+                    } else if (value.size() > 1) {
+                        queryOptions.addParameter(key, value);
+                    } else {
+                        // Empty list
+                        queryOptions.addParameter(key, null);
+                    }
                 }
             }
         }

@@ -26,13 +26,13 @@ public class QueryService extends Service<QueryConfiguration> {
     public void run(QueryConfiguration configuration, Environment environment) throws Exception {
         final String basePath = configuration.getBasePath();
         final String hdfsPath = configuration.getHdfsPath();
+        final CdaResource cdaResource = new CdaResource();
         final LocalFileProvider localFileProvider = new LocalFileProvider(basePath);
         final HDFSProvider hdfsProvider = new HDFSProvider(hdfsPath);
-        environment.addResource(new QueryResource(localFileProvider, hdfsProvider));
+        environment.addResource(new QueryResource(localFileProvider, hdfsProvider, cdaResource));
         environment.addResource(new LocalFileResource(localFileProvider));
         environment.addResource(new LocalFileResultResource(localFileProvider));
-//        environment.addResource(new RestEndpoint());
-        environment.addResource(new CdaResource());
+        environment.addResource(cdaResource);
         environment.addHealthCheck(new BaseDirHealthCheck(basePath));
     }
 

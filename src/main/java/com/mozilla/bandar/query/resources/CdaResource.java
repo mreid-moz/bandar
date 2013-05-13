@@ -19,11 +19,12 @@ import com.mozilla.bandar.query.core.CdaFileList;
 import com.mozilla.bandar.query.core.CdaParameterList;
 import com.mozilla.bandar.query.core.CdaQueryList;
 import com.mozilla.bandar.query.core.CdaResult;
+import com.mozilla.bandar.query.core.QueryProvider;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/cda")
-public class CdaResource {
+public class CdaResource implements QueryProvider {
     Logger logger = LoggerFactory.getLogger(CdaResource.class);
 
     public CdaResource() {
@@ -55,7 +56,7 @@ public class CdaResource {
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public StreamingOutput getByType(@PathParam("cdafile") String cdaFile, @PathParam("outType") String outType, @Context UriInfo ui) {
 //        logger.info("getByType");
-        return new CdaResult(cdaFile, outType, ui.getQueryParameters());
+        return new CdaResult(cdaFile, outType, ui == null ? null : ui.getQueryParameters());
     }
 
     @GET
@@ -101,5 +102,21 @@ public class CdaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getCdaFiles() {
         return new CdaFileList().get();
+    }
+
+    // TODO: split provider out from resource?
+    @Override
+    public String getName() {
+        return "cda";
+    }
+
+    @Override
+    public List<String> getQueryNames() {
+        return getCdaFiles();
+    }
+
+    @Override
+    public StreamingOutput getQueryResult(String name) {
+        return getDefault(name, null);
     }
 }
