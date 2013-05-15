@@ -28,7 +28,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class TestCdaResource {
     String cdaName = "sample";
-    String cdaPath = "/home/mark/mozilla/github/bandar/src/test/resources/cda";
+    String cdaPath = "./src/test/resources/cda";
     Map<String,String> cdaPathMap = new HashMap<String,String>(1);
     String cdaFile = "sample-kettle";
     Logger logger = LoggerFactory.getLogger(TestCdaResource.class);

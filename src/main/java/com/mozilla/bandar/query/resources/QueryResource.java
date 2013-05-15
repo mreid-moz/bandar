@@ -1,7 +1,6 @@
 package com.mozilla.bandar.query.resources;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +21,14 @@ public class QueryResource {
     private final List<QueryProvider> providers;
 
     public QueryResource(QueryProvider... providers) {
-        List<QueryProvider> tempProviders = new ArrayList<QueryProvider>();
+        this.providers = new ArrayList<QueryProvider>();
         for (QueryProvider provider : providers) {
-            tempProviders.add(provider);
+            this.providers.add(provider);
         }
-        this.providers = Collections.unmodifiableList(tempProviders);
+    }
+
+    public void addProvider(QueryProvider provider) {
+        this.providers.add(provider);
     }
 
     @GET
