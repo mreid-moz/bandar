@@ -23,6 +23,7 @@ import pt.webdetails.cpk.ICpkEnvironment;
 import com.mozilla.bandar.cvb.DummyCpkEnvironment;
 import com.mozilla.bandar.query.core.CvbResult;
 import com.mozilla.bandar.query.core.QueryProvider;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/cvb")
@@ -55,7 +56,9 @@ public class CvbResource implements QueryProvider {
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public StreamingOutput getKettleFiles() {
-        return new CvbResult(service, "listFiles", "json", null);
+        MultivaluedMap<String,String> params = new MultivaluedMapImpl();
+        params.add("URI", environmentPath + "/repo");
+        return new CvbResult(service, "/listFiles", "json", params);
     }
 
     // TODO: split provider out from resource?
