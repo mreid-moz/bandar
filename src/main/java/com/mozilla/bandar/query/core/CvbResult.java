@@ -18,17 +18,17 @@ import pt.webdetails.cpf.http.ICommonParameterProvider;
 import pt.webdetails.cpk.CpkCoreService;
 
 public class CvbResult implements StreamingOutput {
+    private static final String PARAM_PREFIX = "param";
+
     Logger logger = LoggerFactory.getLogger(CvbResult.class);
 
     private CpkCoreService service;
     private String kettleFile;
-    private String outputType;
     private MultivaluedMap<String, String> queryParams;
 
-    public CvbResult(CpkCoreService service, String kettleFile, String outputType, MultivaluedMap<String, String> queryParams) {
+    public CvbResult(CpkCoreService service, String kettleFile, MultivaluedMap<String, String> queryParams) {
         this.service = service;
         this.kettleFile = kettleFile;
-        this.outputType = outputType;
         this.queryParams = queryParams;
     }
 
@@ -46,17 +46,17 @@ public class CvbResult implements StreamingOutput {
             @Override
             public void handleSingle(String key, String value) {
                 logger.debug("Setting {} to '{}'", key, value);
-                requestProvider.put("param" + key, value);
+                requestProvider.put(PARAM_PREFIX + key, value);
             }
 
             @Override
             public void handleMulti(String key, List<String> value) {
-                requestProvider.put("param" + key, value.toArray());
+                requestProvider.put(PARAM_PREFIX + key, value.toArray());
             }
 
             @Override
             public void handleEmpty(String key) {
-                requestProvider.put("param" + key, null);
+                requestProvider.put(PARAM_PREFIX + key, null);
             }
         });
 

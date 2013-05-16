@@ -150,4 +150,18 @@ public class CdaResponse {
         return true;
     }
 
+    public int getFieldIndex(String fieldName) {
+        // If we have metadata, figure out what column we're looking for.  Otherwise, guess.
+        int fieldIndex = -1;
+        if (metadata != null && metadata.size() > 0) {
+            for (MetaData field : metadata) {
+                if (fieldName.equals(field.getColName())) {
+                    fieldIndex = field.getColIndex();
+                    break;
+                }
+            }
+        }
+        return fieldIndex;
+    }
+
 }

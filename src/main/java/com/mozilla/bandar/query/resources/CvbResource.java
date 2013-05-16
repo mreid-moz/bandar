@@ -29,6 +29,13 @@ import com.mozilla.bandar.query.core.CvbResult;
 import com.mozilla.bandar.query.core.QueryProvider;
 import com.yammer.metrics.annotation.Timed;
 
+/**
+ * TODO:
+ *  - add a Task to refresh the cached ElementMap
+ * @author mark
+ *
+ */
+
 @Path("/cvb")
 public class CvbResource implements QueryProvider {
     Logger logger = LoggerFactory.getLogger(CvbResource.class);
@@ -60,7 +67,7 @@ public class CvbResource implements QueryProvider {
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public StreamingOutput getKettleResult(@PathParam("cvbfile") String cvbFile, @Context UriInfo ui) {
-        return new CvbResult(service, "/" + cvbFile, "json", ui == null ? null : ui.getQueryParameters());
+        return new CvbResult(service, "/" + cvbFile, ui == null ? null : ui.getQueryParameters());
     }
 
     // TODO: split provider out from resource?
