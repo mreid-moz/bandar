@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CdaResponse {
+public class CToolsResponse {
     public static class MetaData {
         @JsonProperty
         String colName;
@@ -88,9 +88,9 @@ public class CdaResponse {
     @JsonProperty
     private List<List<Object>> resultset;
 
-    private CdaResponse() { }
+    private CToolsResponse() { }
 
-    public CdaResponse(List<MetaData> metadata, Map<String, String> queryInfo, List<List<Object>> resultset) {
+    public CToolsResponse(List<MetaData> metadata, Map<String, String> queryInfo, List<List<Object>> resultset) {
         this();
         this.metadata = metadata;
         this.queryInfo = queryInfo;
@@ -131,7 +131,7 @@ public class CdaResponse {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CdaResponse other = (CdaResponse) obj;
+        CToolsResponse other = (CToolsResponse) obj;
         if (metadata == null) {
             if (other.metadata != null)
                 return false;

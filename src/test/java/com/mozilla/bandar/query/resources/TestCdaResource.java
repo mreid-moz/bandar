@@ -22,7 +22,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mozilla.bandar.api.CdaResponse;
+import com.mozilla.bandar.api.CToolsResponse;
 import com.mozilla.bandar.query.core.LocalFileProvider;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
@@ -64,7 +64,7 @@ public class TestCdaResource {
             System.err.println(nice);
             assertTrue(nice.length() > 0);
             if ("json".equals(type)) {
-                CdaResponse response = fromJson(nice, CdaResponse.class);
+                CToolsResponse response = fromJson(nice, CToolsResponse.class);
                 assertTrue(response.getResultset().size() == 2);
                 assertEquals("Hola",        response.getResultset().get(0).get(0));
                 assertEquals(30,            response.getResultset().get(0).get(1));
@@ -90,7 +90,7 @@ public class TestCdaResource {
         System.err.println("Found these parameters for " + cdaFile + ":");
         System.err.println(nice);
         assertTrue(nice.length() > 0);
-        CdaResponse response = fromJson(nice, CdaResponse.class);
+        CToolsResponse response = fromJson(nice, CToolsResponse.class);
         assertEquals(2, response.getResultset().size());
     }
 

@@ -15,14 +15,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestFixtures {
-    CdaResponse reference;
+    CToolsResponse reference;
 
     @Before
     public void setUp() {
-        List<CdaResponse.MetaData> metadata = new ArrayList<CdaResponse.MetaData>(3);
-        metadata.add(new CdaResponse.MetaData("foo", "String", 0));
-        metadata.add(new CdaResponse.MetaData("bar", "Integer", 1));
-        metadata.add(new CdaResponse.MetaData("baz", "Boolean", 2));
+        List<CToolsResponse.MetaData> metadata = new ArrayList<CToolsResponse.MetaData>(3);
+        metadata.add(new CToolsResponse.MetaData("foo", "String", 0));
+        metadata.add(new CToolsResponse.MetaData("bar", "Integer", 1));
+        metadata.add(new CToolsResponse.MetaData("baz", "Boolean", 2));
 
         Map<String,String> queryInfo = new HashMap<String,String>();
         queryInfo.put("totalRows", "2");
@@ -35,7 +35,7 @@ public class TestFixtures {
         resultset.add(row1);
         resultset.add(row2);
 
-        reference = new CdaResponse(metadata, queryInfo, resultset);
+        reference = new CToolsResponse(metadata, queryInfo, resultset);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class TestFixtures {
 
     @Test
     public void cdaResponseDeserialization() throws Exception {
-        CdaResponse fixture = fromJson(jsonFixture("fixtures/cdaresponse.json"), CdaResponse.class);
+        CToolsResponse fixture = fromJson(jsonFixture("fixtures/cdaresponse.json"), CToolsResponse.class);
         assertTrue(reference.equals(fixture));
     }
 }

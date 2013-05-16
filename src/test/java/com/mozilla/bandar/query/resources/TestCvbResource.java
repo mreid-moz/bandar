@@ -19,7 +19,7 @@ import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mozilla.bandar.api.CdaResponse;
+import com.mozilla.bandar.api.CToolsResponse;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class TestCvbResource {
@@ -45,7 +45,7 @@ public class TestCvbResource {
         System.out.println(nice);
         assertTrue(nice.length() > 0);
 
-        CdaResponse response = fromJson(nice, CdaResponse.class);
+        CToolsResponse response = fromJson(nice, CToolsResponse.class);
 
         List<String> endpoints = resource.getQueryNames();
         for (String endpoint : endpoints) {
@@ -55,7 +55,7 @@ public class TestCvbResource {
         }
     }
 
-    private boolean responseContains(CdaResponse response, String value, String fieldName) {
+    private boolean responseContains(CToolsResponse response, String value, String fieldName) {
         // If we have metadata, figure out what column we're looking for.
         int fieldIndex = response.getFieldIndex(fieldName);
 
