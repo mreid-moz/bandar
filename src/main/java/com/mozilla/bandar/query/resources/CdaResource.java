@@ -97,7 +97,7 @@ public class CdaResource implements QueryProvider {
     //  - listDataAccessTypes
 
     @GET
-    @Path("/")
+//    @Path("/")
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getCdaFiles() {

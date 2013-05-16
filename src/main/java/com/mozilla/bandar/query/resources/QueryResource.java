@@ -7,10 +7,8 @@ import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.google.common.base.Optional;
 import com.mozilla.bandar.query.core.QueryList;
 import com.mozilla.bandar.query.core.QueryProvider;
 import com.yammer.metrics.annotation.Timed;
@@ -33,7 +31,7 @@ public class QueryResource {
 
     @GET
     @Timed
-    public Map<String,List<String>> getAvailableQueries(@QueryParam("filetype") Optional<String> filetype) {
+    public Map<String,List<String>> getAvailableQueries() {
         return new QueryList(providers).getQueries();
     }
 }

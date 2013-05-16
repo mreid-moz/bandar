@@ -18,7 +18,7 @@ public class CdaFileList {
 
     public List<String> get() {
         ICdaEnvironment environment = CdaEngine.getEnvironment();
-        logger.error("Getting repo files...");
+        logger.debug("Getting repo files...");
         IRepositoryAccess repo = environment.getRepositoryAccess();
         IRepositoryFile[] repositoryFiles = repo.listRepositoryFiles(new IRepositoryFileFilter(){
             @Override

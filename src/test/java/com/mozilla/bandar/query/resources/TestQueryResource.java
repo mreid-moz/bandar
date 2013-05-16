@@ -25,7 +25,7 @@ public class TestQueryResource {
     @Test
     public void test() {
         QueryResource queryResource = new QueryResource(provider);
-        Map<String, List<String>> queries = queryResource.getAvailableQueries(null);
+        Map<String, List<String>> queries = queryResource.getAvailableQueries();
         assertEquals(1, queries.size());
 
         boolean threw = false;

@@ -43,6 +43,7 @@ public class QueryService extends Service<QueryConfiguration> {
         QueryResource queries = new QueryResource(localFileProvider, hdfsProvider, cdaResource);
         if (cvbResource != null) {
             queries.addProvider(cvbResource);
+            environment.addResource(cvbResource);
         }
         environment.addResource(queries);
 
