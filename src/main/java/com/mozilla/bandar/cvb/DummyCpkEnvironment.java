@@ -49,4 +49,9 @@ public class DummyCpkEnvironment implements ICpkEnvironment {
     public ISessionUtils getSessionUtils() {
         return new SimpleSessionUtils(new SimpleUserSession("userName", null, true, null), null, null);
     }
+
+    @Override
+    public void reload() {
+        // no.
+    }
 }

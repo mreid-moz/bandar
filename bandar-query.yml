@@ -1,2 +1,2 @@
 basePath: /tmp/bandar
-cvbPath: /home/mark/mozilla/github/bandar/src/test/resources/cpk/kettle
+cvbPath: ./src/test/resources/cpk/kettle

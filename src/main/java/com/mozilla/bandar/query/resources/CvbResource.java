@@ -2,6 +2,7 @@ package com.mozilla.bandar.query.resources;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +13,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
+import org.dom4j.DocumentException;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
@@ -32,6 +35,7 @@ import com.yammer.metrics.annotation.Timed;
 /**
  * TODO:
  *  - add a Task to refresh the cached ElementMap
+ *  - report a 404 when we can't find an element.
  * @author mark
  *
  */
@@ -67,6 +71,9 @@ public class CvbResource implements QueryProvider {
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public StreamingOutput getKettleResult(@PathParam("cvbfile") String cvbFile, @Context UriInfo ui) {
+        if (!service.hasElement(cvbFile)) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
         return new CvbResult(service, "/" + cvbFile, ui == null ? null : ui.getQueryParameters());
     }
 
@@ -94,5 +101,15 @@ public class CvbResource implements QueryProvider {
     @Override
     public StreamingOutput getQueryResult(String name) {
         return getKettleResult(name, null);
+    }
+
+    public void refresh(OutputStream out) {
+        try {
+            service.refresh(out, null);
+        } catch (DocumentException e) {
+            logger.error("Document Error refreshing CVB Entities", e);
+        } catch (IOException e) {
+            logger.error("IO Error refreshing CVB Entities", e);
+        }
     }
 }
