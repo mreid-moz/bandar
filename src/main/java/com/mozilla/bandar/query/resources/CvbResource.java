@@ -34,8 +34,8 @@ import com.yammer.metrics.annotation.Timed;
 
 /**
  * TODO:
- *  - add a Task to refresh the cached ElementMap
- *  - report a 404 when we can't find an element.
+ *  - Make sure we can run a "listFiles" on HDFS
+ *  - Track down the extra columns that appear in results (generate-rows.ktr)
  * @author mark
  *
  */
