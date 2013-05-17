@@ -35,7 +35,6 @@ public class CdaResult extends CdaBaseResult {
         final QueryOptions queryOptions = new QueryOptions();
         queryOptions.setDataAccessId("2");
 
-
         QueryParamHelper.handle(queryParams, new QueryParamHelper.Handler() {
             @Override
             public void handleSingle(String key, String value) {

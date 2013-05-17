@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
+import org.apache.commons.vfs.FileSystemException;
 import org.dom4j.DocumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.webdetails.cda.CdaEngine;
 import pt.webdetails.cda.connections.UnsupportedConnectionException;
@@ -19,6 +23,7 @@ import pt.webdetails.cda.settings.SettingsManager;
 import pt.webdetails.cda.settings.UnknownDataAccessException;
 
 public abstract class CdaBaseResult implements StreamingOutput {
+    Logger logger = LoggerFactory.getLogger(CdaBaseResult.class);
     protected String cdaFile;
 
     public CdaBaseResult(String cdaFile) {
@@ -33,8 +38,26 @@ public abstract class CdaBaseResult implements StreamingOutput {
         try {
             final CdaEngine engine = CdaEngine.getInstance();
             CdaSettings cdaSettings = null;
-            if (cdaFile != null)
-                cdaSettings = SettingsManager.getInstance().parseSettingsFile(cdaFile + ".cda");
+            if (cdaFile != null) {
+                try {
+                    cdaSettings = SettingsManager.getInstance().parseSettingsFile(cdaFile + ".cda");
+                } catch (RuntimeException e) {
+                    // TODO: There must be a better way to see if we tried to access a
+                    //       non-existent file.  We could check the list of results first
+                    //       but that might slow things down.
+                    Throwable cause = e.getCause();
+                    if (cause instanceof FileSystemException) {
+                        FileSystemException ex = (FileSystemException)cause;
+                        String code = ex.getCode();
+                        if ("vfs.provider/get-size-not-file.error".equals(code)) {
+                            throw new WebApplicationException(Response.Status.NOT_FOUND);
+                        } else {
+                            logger.error("Error Accessing '{}'", cdaFile, cause);
+                        }
+                    }
+                    throw e;
+                }
+            }
             writeCdaResult(engine, cdaSettings, outputStream);
             causedException = false;
         } catch (UnknownDataAccessException e) {

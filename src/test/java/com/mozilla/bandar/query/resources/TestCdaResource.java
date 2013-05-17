@@ -2,6 +2,7 @@ package com.mozilla.bandar.query.resources;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.fromJson;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
@@ -39,15 +41,21 @@ public class TestCdaResource {
         cdaPathMap.put(cdaName, cdaPath);
     }
 
-    @Test
-    public void testCdaResult() throws WebApplicationException, IOException {
-        CdaResource cdaResource = new CdaResource();
-        List<String> types = Arrays.asList("json", "xml", "html", "csv");
+    private UriInfo getMockUriInfo() {
         MultivaluedMap<String,String> params = new MultivaluedMapImpl();
         params.add("fooFilter", "Hello");
         params.add("barFilter", "20");
         UriInfo ui = Mockito.mock(UriInfo.class);
         Mockito.when(ui.getQueryParameters()).thenReturn(params);
+
+        return ui;
+    }
+
+    @Test
+    public void testCdaResult() throws WebApplicationException, IOException {
+        CdaResource cdaResource = new CdaResource();
+        List<String> types = Arrays.asList("json", "xml", "html", "csv");
+        UriInfo ui = getMockUriInfo();
         for (String type : types)
         {
             StreamingOutput result;
@@ -117,5 +125,35 @@ public class TestCdaResource {
         List<String> result = cdaResource.getCdaFiles();
         assertTrue(result.size() > 0);
         assertTrue(result.contains(cdaFile));
+    }
+
+    @Test
+    public void testCdaBadFiles() {
+        CdaResource cdaResource = new CdaResource();
+
+        List<String> result = cdaResource.getCdaFiles();
+
+        String badFile = "I am a banana";
+        assertFalse(result.contains(badFile));
+
+        logger.info("Requesting non-existent CDA file '{}'.", badFile);
+        boolean threw = false;
+        try {
+            StreamingOutput json = cdaResource.getJson(badFile, getMockUriInfo());
+            assertTrue(json != null);
+
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            json.write(output);
+        } catch (WebApplicationException e) {
+            threw = true;
+            Response response = e.getResponse();
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            threw = true;
+        }
+
+        assertTrue(threw);
     }
 }

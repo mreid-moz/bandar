@@ -7,8 +7,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
@@ -55,8 +57,20 @@ public class CdaResource implements QueryProvider {
     @Timed
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public StreamingOutput getByType(@PathParam("cdafile") String cdaFile, @PathParam("outType") String outType, @Context UriInfo ui) {
+        CdaResult result = null;
 //        logger.info("getByType");
-        return new CdaResult(cdaFile, outType, ui == null ? null : ui.getQueryParameters());
+        try {
+            result = new CdaResult(cdaFile, outType, ui == null ? null : ui.getQueryParameters());
+        } catch (RuntimeException e) {
+            List<String> cdaFiles = getQueryNames();
+            if (!cdaFiles.contains(cdaFile)) {
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            } else {
+                throw new WebApplicationException(e);
+            }
+        }
+
+        return result;
     }
 
     @GET
