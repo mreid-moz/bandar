@@ -115,7 +115,8 @@ public class CdaResource implements QueryProvider {
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getCdaFiles() {
-        return new CdaFileList().get();
+        CdaFileList list = new CdaFileList();
+        return list.get();
     }
 
     // TODO: split provider out from resource?

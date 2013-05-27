@@ -10,6 +10,7 @@ import com.mozilla.bandar.query.resources.CvbResource;
 import com.yammer.dropwizard.tasks.Task;
 
 public class CvbRefreshTask extends Task {
+    public static final String FINISH_MESSAGE = "\n=== Finished updating CVB Cache ===";
     private CvbResource cvbResource;
 
     protected CvbRefreshTask(String name) {
@@ -28,7 +29,7 @@ public class CvbRefreshTask extends Task {
             cvbResource.refresh(output);
         }
         output.flush();
-        printWriter.println("\n=== Finished updating CVB Cache ===");
+        printWriter.println(FINISH_MESSAGE);
     }
 
 }

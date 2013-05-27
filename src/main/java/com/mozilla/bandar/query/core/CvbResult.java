@@ -27,6 +27,7 @@ public class CvbResult implements StreamingOutput {
     private MultivaluedMap<String, String> queryParams;
 
     public CvbResult(CpkCoreService service, String kettleFile, MultivaluedMap<String, String> queryParams) {
+        logger.debug("Creating CvbResult for kettle file '{}'", kettleFile);
         this.service = service;
         this.kettleFile = kettleFile;
         this.queryParams = queryParams;

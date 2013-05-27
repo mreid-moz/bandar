@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
@@ -20,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mozilla.bandar.api.CToolsResponse;
+import com.mozilla.bandar.query.tasks.CvbRefreshTask;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class TestCvbResource {
@@ -53,6 +56,46 @@ public class TestCvbResource {
             assertTrue(responseContains(response, endpoint + ".ktr", "short_filename")
                     || responseContains(response, endpoint + ".kjb", "short_filename"));
         }
+    }
+
+    @Test
+    public void testCvbHdfsAccess() throws WebApplicationException, IOException, KettleException  {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        MultivaluedMap<String,String> params = new MultivaluedMapImpl();
+        params.add("URI", "hdfs://admin1.mango.metrics.scl3.mozilla.com:8020/user/mreid/");
+
+        UriInfo ui = Mockito.mock(UriInfo.class);
+        Mockito.when(ui.getQueryParameters()).thenReturn(params);
+
+        CvbResource resource = new CvbResource(path);
+        StreamingOutput kettleFiles = resource.getKettleResult("listFiles", ui);
+        kettleFiles.write(output);
+
+        String nice = output.toString("UTF-8");
+        System.out.println(nice);
+        assertTrue(nice.length() > 0);
+
+//        CToolsResponse response = fromJson(nice, CToolsResponse.class);
+
+//        List<String> endpoints = resource.getQueryNames();
+//        for (String endpoint : endpoints) {
+//            // Make sure that the listFiles thing works and gives at least the items in getQueryNames
+//            assertTrue(responseContains(response, endpoint + ".ktr", "short_filename")
+//                    || responseContains(response, endpoint + ".kjb", "short_filename"));
+//        }
+    }
+
+    @Test
+    public void testCvbRefreshTask() throws Exception {
+        CvbResource resource = new CvbResource(path);
+        CvbRefreshTask task = new CvbRefreshTask(resource);
+        StringWriter out = new StringWriter();
+        PrintWriter writer = new PrintWriter(out);
+        task.execute(null, writer);
+        String result = out.toString();
+
+        assertTrue(result.contains(CvbRefreshTask.FINISH_MESSAGE));
     }
 
     private boolean responseContains(CToolsResponse response, String value, String fieldName) {

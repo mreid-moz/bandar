@@ -172,6 +172,9 @@ class DummyPluginUtils implements IPluginUtils {
     }
 
     public void setResponseHeaders(Map<String, ICommonParameterProvider> parameterProviders, final String mimeType, final int cacheDuration, final String attachmentName, long attachmentSize) {
+        if (parameterProviders == null)
+            return;
+
         // Make sure we have the correct mime type
         final HttpServletResponse response = getResponse(parameterProviders);
 

@@ -4,6 +4,8 @@ import static com.yammer.dropwizard.testing.JsonHelpers.asJson;
 import static com.yammer.dropwizard.testing.JsonHelpers.fromJson;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.mozilla.bandar.api.CToolsResponse.MetaData;
 
 public class TestFixtures {
     CToolsResponse reference;
@@ -47,5 +51,27 @@ public class TestFixtures {
     public void cdaResponseDeserialization() throws Exception {
         CToolsResponse fixture = fromJson(jsonFixture("fixtures/cdaresponse.json"), CToolsResponse.class);
         assertTrue(reference.equals(fixture));
+    }
+
+    @Test
+    public void equalsAndHashCode() throws Exception {
+        CToolsResponse apple = fromJson(jsonFixture("fixtures/cdaresponse.json"), CToolsResponse.class);
+        CToolsResponse orange = fromJson(jsonFixture("fixtures/cdaresponse.json"), CToolsResponse.class);
+
+        assertEquals(apple, orange);
+        assertEquals(apple, apple);
+        assertEquals(apple.hashCode(), orange.hashCode());
+
+        MetaData appleMetadata = apple.getMetadata().get(0);
+        MetaData orangeMetadata = orange.getMetadata().get(0);
+        assertEquals(appleMetadata, orangeMetadata);
+        assertEquals(appleMetadata.hashCode(), orangeMetadata.hashCode());
+
+        appleMetadata.setColType("Apple");
+        orangeMetadata.setColType("Orange");
+        assertFalse(appleMetadata.equals(orangeMetadata));
+        assertNotSame(appleMetadata.hashCode(), orangeMetadata.hashCode());
+
+        assertFalse(apple.equals(orange));
     }
 }

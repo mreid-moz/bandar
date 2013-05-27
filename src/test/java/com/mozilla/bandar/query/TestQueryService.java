@@ -27,7 +27,20 @@ public class TestQueryService {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testValidCvb() throws Exception {
+        config.setCvbPath(Constants.VALID_CVB_PATH);
+        service.initialize(bootstrap);
+        verify(bootstrap).setName("bandar");
+
+        service.run(config, environment);
+
+        verify(environment).addHealthCheck(any(BaseDirHealthCheck.class));
+        verify(environment, atLeast(2)).addResource(any(Object.class));
+    }
+
+    @Test
+    public void testInvalidCvb() throws Exception {
+        config.setCvbPath(Constants.INVALID_CVB_PATH);
         service.initialize(bootstrap);
         verify(bootstrap).setName("bandar");
 
