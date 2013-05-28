@@ -41,8 +41,13 @@ A GET request to `/file` lists the available files, and a GET request to
 Files may be inside subdirectories, though such files will not be listed in the
 base `/file` list.  For example, you can GET `/file/path/to/anotherfile.zip`.
 
+There is sanity checking to make sure clients cannot fetch files outside of
+the specified directory (for example by fetching `/file/../../etc/passwd`).
+
 ### Extending Filesystem provider
 Simply drop new files into the configured directory and they will be available.
+
+----
 
 CDA
 ---
@@ -82,8 +87,31 @@ are added as query parameters.  For example:
 To add new CDA endpoints, drop a CDA file into the specified repository.
 The example configuration is located in `src/main/resources/cda.spring.xml`.
 
+----
+
 CVB
 ---
+
+Community VFS Browser (CVB) is a layer on top of CPF / CPK which allow
+access-controlled browsing of VFS locations.
+
+The general use is similar to the other endpoints, in that you can hit `/cvb`
+and get a list of endpoints. These include:
+- listFiles - list the files at the specified URI. Example:
+  - `curl http://localhost:8080/cvb/listFiles?URI=%2Ftmp%2Fbandar`
+- downloadFile - TODO
+- getLocations - list the locations configured in `cvb.xml`
+
+### Extending CVB
+To add new endpoints, add kettle jobs (.kjb) or kettle transformations
+(.ktr) in the configured location. CPK (which powers CVB) caches a list of
+valid endpoints, so you also need to refresh the cache after making changes.
+
+There is a task for refreshing the cache, visit it using:
+`curl -X POST http://localhost:8081/tasks/refresh-cvb`
+
+----
+
 
 CDA / CVB Quickstart:
 ---------------------
@@ -137,6 +165,10 @@ CDA / CVB Quickstart:
 - Get a list of files in the root dir:
 
   `curl http://localhost:8080/cda/listFiles`
+
+- Get a list of files in another dir:
+
+  `curl http://localhost:8080/cda/listFiles?URI=%2Ftmp%2Fbandar`
 
 - Refresh the CVB endpoints:
 
