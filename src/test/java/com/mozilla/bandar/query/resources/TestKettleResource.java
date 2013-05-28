@@ -36,7 +36,7 @@ public class TestKettleResource {
         UriInfo ui = Mockito.mock(UriInfo.class);
         Mockito.when(ui.getQueryParameters()).thenReturn(params);
 
-//        KettleResource resource = new KettleResource(fullPath);
+        KettleResource resource = new KettleResource(fullPath);
         KettleResult result = new KettleResult(fullPath, testEtl, params);
 //        CToolsResponse response = result.getResponse();
         result.write(output);

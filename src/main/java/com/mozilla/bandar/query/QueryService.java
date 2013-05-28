@@ -5,6 +5,7 @@ import com.mozilla.bandar.query.core.HDFSProvider;
 import com.mozilla.bandar.query.core.LocalFileProvider;
 import com.mozilla.bandar.query.resources.CdaResource;
 import com.mozilla.bandar.query.resources.CvbResource;
+import com.mozilla.bandar.query.resources.KettleResource;
 import com.mozilla.bandar.query.resources.LocalFileResource;
 import com.mozilla.bandar.query.resources.LocalFileResultResource;
 import com.mozilla.bandar.query.resources.QueryResource;
@@ -33,6 +34,8 @@ public class QueryService extends Service<QueryConfiguration> {
         // CDA configuration is handled by spring (src/main/resources/cda.spring.xml)
         final CdaResource cdaResource = new CdaResource();
 
+        KettleResource kettleResource = new KettleResource("./src/test/resources/kettle");
+
         final LocalFileProvider localFileProvider = new LocalFileProvider(basePath);
         final HDFSProvider hdfsProvider = new HDFSProvider(hdfsPath);
         final CvbResource cvbResource;
@@ -41,7 +44,7 @@ public class QueryService extends Service<QueryConfiguration> {
         } else {
             cvbResource = null;
         }
-        QueryResource queries = new QueryResource(localFileProvider, hdfsProvider, cdaResource);
+        QueryResource queries = new QueryResource(localFileProvider, hdfsProvider, cdaResource, kettleResource);
         if (cvbResource != null) {
             queries.addProvider(cvbResource);
             environment.addResource(cvbResource);
@@ -51,6 +54,7 @@ public class QueryService extends Service<QueryConfiguration> {
         environment.addResource(new LocalFileResource(localFileProvider));
         environment.addResource(new LocalFileResultResource(localFileProvider));
         environment.addResource(cdaResource);
+        environment.addResource(kettleResource);
         environment.addHealthCheck(new BaseDirHealthCheck(basePath));
 
         environment.addTask(new CvbRefreshTask(cvbResource));

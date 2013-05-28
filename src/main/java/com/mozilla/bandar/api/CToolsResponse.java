@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+//@XmlRootElement
 public class CToolsResponse {
     public static class MetaData {
         @JsonProperty
@@ -42,6 +43,7 @@ public class CToolsResponse {
             this.colType = colType;
             this.colName = colName;
         }
+
         @Override
         public int hashCode() {
             final int prime = 31;
@@ -79,12 +81,15 @@ public class CToolsResponse {
 
     }
 
+//    @XmlElementWrapper
     @JsonProperty
     private List<MetaData> metadata;
 
+//    @XmlElementWrapper
     @JsonProperty
     private Map<String,String> queryInfo;
 
+//    @XmlElementWrapper
     @JsonProperty
     private List<List<Object>> resultset;
 

@@ -65,6 +65,15 @@ public class KettleResource implements QueryProvider {
         return kettleResult.getResponse();
     }
 
+    @GET
+    @Path("/{etlfile}.xml")
+    @Timed
+    @Produces(MediaType.APPLICATION_XML)
+    public CToolsResponse getKettleResultXml(@PathParam("etlfile") String etlFile, @Context UriInfo ui) throws IOException {
+        KettleResult kettleResult = new KettleResult(environmentPath, etlFile, ui == null ? null : ui.getQueryParameters());
+        return kettleResult.getResponse();
+    }
+
     // TODO: split provider out from resource?
     @Override
     public String getName() {
