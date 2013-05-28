@@ -60,9 +60,9 @@ public class TestCdaResource {
         {
             StreamingOutput result;
             if ("json".equals(type))
-                result = cdaResource.getJson(cdaFile, ui);
+                result = cdaResource.getJson(cdaFile, null, ui);
             else
-                result = cdaResource.getByType(cdaFile, type, ui);
+                result = cdaResource.getByType(cdaFile, null, type, ui);
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             result.write(output);
@@ -139,7 +139,7 @@ public class TestCdaResource {
         logger.info("Requesting non-existent CDA file '{}'.", badFile);
         boolean threw = false;
         try {
-            StreamingOutput json = cdaResource.getJson(badFile, getMockUriInfo());
+            StreamingOutput json = cdaResource.getJson(badFile, null, getMockUriInfo());
             assertTrue(json != null);
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();

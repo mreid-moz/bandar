@@ -18,13 +18,24 @@ import pt.webdetails.cda.settings.CdaSettings;
 import pt.webdetails.cda.settings.UnknownDataAccessException;
 
 public class CdaResult extends CdaBaseResult {
+    private static final String DEFAULT_DATA_ID = "2";
     private String outputType;
     private MultivaluedMap<String, String> queryParams;
+    private String dataId;
 
     public CdaResult(String cdaFile, String outputType, MultivaluedMap<String, String> queryParams) {
+        this(cdaFile, DEFAULT_DATA_ID, outputType, queryParams);
+    }
+
+    public CdaResult(String cdaFile, String dataId, String outputType, MultivaluedMap<String, String> queryParams) {
         super(cdaFile);
         this.outputType = outputType;
         this.queryParams = queryParams;
+        if (dataId != null && dataId.length() > 0) {
+            this.dataId = dataId;
+        } else {
+            this.dataId = DEFAULT_DATA_ID;
+        }
     }
 
     @Override
@@ -33,7 +44,9 @@ public class CdaResult extends CdaBaseResult {
             UnknownDataAccessException, UnsupportedExporterException, ExporterException, QueryException {
 
         final QueryOptions queryOptions = new QueryOptions();
-        queryOptions.setDataAccessId("2");
+
+        // TODO: if there is only one DataAccessId in the CDA file, just use it.
+        queryOptions.setDataAccessId(dataId);
 
         QueryParamHelper.handle(queryParams, new QueryParamHelper.Handler() {
             @Override

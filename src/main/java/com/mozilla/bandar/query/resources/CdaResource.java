@@ -27,40 +27,41 @@ import com.yammer.metrics.annotation.Timed;
 
 @Path("/cda")
 public class CdaResource implements QueryProvider {
+    public static final String DATA_ID_PATTERN = "{dataid : (/[0-9]+)?}";
     Logger logger = LoggerFactory.getLogger(CdaResource.class);
 
     public CdaResource() {
     }
 
     @GET
-    @Path("/{cdafile}.json")
+    @Path("/{cdafile}.json" + DATA_ID_PATTERN)
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
-    public StreamingOutput getJson(@PathParam("cdafile") String cdaFile, @Context UriInfo ui) {
+    public StreamingOutput getJson(@PathParam("cdafile") String cdaFile, @PathParam("dataid") String dataId, @Context UriInfo ui) {
 //        logger.info("getJson");
-        return getByType(cdaFile, "json", ui);
+        return getByType(cdaFile, dataId, "json", ui);
     }
 
     @GET
-    @Path("/{cdafile}.xml")
+    @Path("/{cdafile}.xml" + DATA_ID_PATTERN)
     @Timed
     @Produces(MediaType.APPLICATION_XML)
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
-    public StreamingOutput getXml(@PathParam("cdafile") String cdaFile, @Context UriInfo ui) {
+    public StreamingOutput getXml(@PathParam("cdafile") String cdaFile, @PathParam("dataid") String dataId, @Context UriInfo ui) {
 //        logger.info("getXml");
-        return getByType(cdaFile, "xml", ui);
+        return getByType(cdaFile, dataId, "xml", ui);
     }
 
     @GET
-    @Path("/{cdafile}.{outType}")
+    @Path("/{cdafile}.{outType}" + DATA_ID_PATTERN)
     @Timed
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
-    public StreamingOutput getByType(@PathParam("cdafile") String cdaFile, @PathParam("outType") String outType, @Context UriInfo ui) {
+    public StreamingOutput getByType(@PathParam("cdafile") String cdaFile, @PathParam("dataid") String dataId, @PathParam("outType") String outType, @Context UriInfo ui) {
         CdaResult result = null;
-//        logger.info("getByType");
+
         try {
-            result = new CdaResult(cdaFile, outType, ui == null ? null : ui.getQueryParameters());
+            result = new CdaResult(cdaFile, cleanDataId(dataId), outType, ui == null ? null : ui.getQueryParameters());
         } catch (RuntimeException e) {
             List<String> cdaFiles = getQueryNames();
             if (!cdaFiles.contains(cdaFile)) {
@@ -73,13 +74,23 @@ public class CdaResource implements QueryProvider {
         return result;
     }
 
+    // Remove the leading slash if present.
+    private String cleanDataId(String dataId) {
+        String cleanDataId = dataId;
+        if (dataId != null && dataId.indexOf("/") == 0) {
+            cleanDataId = dataId.substring(1);
+        }
+
+        return cleanDataId;
+    }
+
     @GET
-    @Path("/{cdafile}")
+    @Path("/{cdafile}" + DATA_ID_PATTERN)
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
-    public StreamingOutput getDefault(@PathParam("cdafile") String cdaFile, @Context UriInfo ui) {
-        return getJson(cdaFile, ui);
+    public StreamingOutput getDefault(@PathParam("cdafile") String cdaFile, @PathParam("dataid") String dataId, @Context UriInfo ui) {
+        return getJson(cdaFile, dataId, ui);
     }
 
     @GET
@@ -88,7 +99,8 @@ public class CdaResource implements QueryProvider {
     @Produces(MediaType.APPLICATION_JSON)
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public StreamingOutput getParameters(@PathParam("cdafile") String cdaFile) {
-        // TODO: /{cdafile}/parameters.{outType}?
+        // TODO: /{cdafile}/{dataid}/parameters
+        //       since different data ids can have different parameters
         return new CdaParameterList(cdaFile);
     }
     @GET
@@ -111,7 +123,6 @@ public class CdaResource implements QueryProvider {
     //  - listDataAccessTypes
 
     @GET
-//    @Path("/")
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getCdaFiles() {
@@ -132,6 +143,6 @@ public class CdaResource implements QueryProvider {
 
     @Override
     public StreamingOutput getQueryResult(String name) {
-        return getDefault(name, null);
+        return getDefault(name, null, null);
     }
 }
