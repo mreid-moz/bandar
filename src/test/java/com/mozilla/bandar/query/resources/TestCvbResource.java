@@ -76,6 +76,7 @@ public class TestCvbResource {
         System.out.println(nice);
         assertTrue(nice.length() > 0);
 
+        // FIXME: this doesn't work :(
 //        CToolsResponse response = fromJson(nice, CToolsResponse.class);
 
 //        List<String> endpoints = resource.getQueryNames();
