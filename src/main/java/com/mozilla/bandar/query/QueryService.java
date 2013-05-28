@@ -7,7 +7,6 @@ import com.mozilla.bandar.query.resources.CdaResource;
 import com.mozilla.bandar.query.resources.CvbResource;
 import com.mozilla.bandar.query.resources.KettleResource;
 import com.mozilla.bandar.query.resources.LocalFileResource;
-import com.mozilla.bandar.query.resources.LocalFileResultResource;
 import com.mozilla.bandar.query.resources.QueryResource;
 import com.mozilla.bandar.query.tasks.CvbRefreshTask;
 import com.yammer.dropwizard.Service;
@@ -52,7 +51,7 @@ public class QueryService extends Service<QueryConfiguration> {
         environment.addResource(queries);
 
         environment.addResource(new LocalFileResource(localFileProvider));
-        environment.addResource(new LocalFileResultResource(localFileProvider));
+//        environment.addResource(new LocalFileResultResource(localFileProvider));
         environment.addResource(cdaResource);
         environment.addResource(kettleResource);
         environment.addHealthCheck(new BaseDirHealthCheck(basePath));

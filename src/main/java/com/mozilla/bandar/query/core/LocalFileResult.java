@@ -56,10 +56,10 @@ public class LocalFileResult implements StreamingOutput {
     }
 
     public boolean canRead() {
-        return isValidChild && sourceFile.canRead();
+        return isValidChild && sourceFile.isFile() && sourceFile.canRead();
     }
 
     public boolean exists() {
-        return isValidChild && sourceFile.exists();
+        return isValidChild && sourceFile.isFile() && sourceFile.exists();
     }
 }
