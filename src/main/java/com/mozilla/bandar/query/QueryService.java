@@ -1,7 +1,6 @@
 package com.mozilla.bandar.query;
 
 import com.mozilla.bandar.health.BaseDirHealthCheck;
-import com.mozilla.bandar.query.core.HDFSProvider;
 import com.mozilla.bandar.query.core.LocalFileProvider;
 import com.mozilla.bandar.query.resources.CdaResource;
 import com.mozilla.bandar.query.resources.CvbResource;
@@ -27,7 +26,7 @@ public class QueryService extends Service<QueryConfiguration> {
     @Override
     public void run(QueryConfiguration configuration, Environment environment) throws Exception {
         final String basePath = configuration.getBasePath();
-        final String hdfsPath = configuration.getHdfsPath();
+//        final String hdfsPath = configuration.getHdfsPath();
         final String cvbPath = configuration.getCvbPath();
 
         // CDA configuration is handled by spring (src/main/resources/cda.spring.xml)
@@ -36,14 +35,14 @@ public class QueryService extends Service<QueryConfiguration> {
         KettleResource kettleResource = new KettleResource("./src/test/resources/kettle");
 
         final LocalFileProvider localFileProvider = new LocalFileProvider(basePath);
-        final HDFSProvider hdfsProvider = new HDFSProvider(hdfsPath);
+//        final HDFSProvider hdfsProvider = new HDFSProvider(hdfsPath);
         final CvbResource cvbResource;
         if (cvbPath != null && cvbPath.length() > 0) {
             cvbResource = new CvbResource(cvbPath);
         } else {
             cvbResource = null;
         }
-        QueryResource queries = new QueryResource(localFileProvider, hdfsProvider, cdaResource, kettleResource);
+        QueryResource queries = new QueryResource(localFileProvider, cdaResource, kettleResource);
         if (cvbResource != null) {
             queries.addProvider(cvbResource);
             environment.addResource(cvbResource);
