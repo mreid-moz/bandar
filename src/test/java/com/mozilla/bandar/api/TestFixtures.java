@@ -7,11 +7,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -73,5 +81,33 @@ public class TestFixtures {
         assertNotSame(appleMetadata.hashCode(), orangeMetadata.hashCode());
 
         assertFalse(apple.equals(orange));
+    }
+
+    @Test
+    public void testXmlSerialization() throws IOException, JAXBException {
+        CToolsResponse apple = fromJson(jsonFixture("fixtures/cdaresponse.json"), CToolsResponse.class);
+
+        boolean threw = false;
+
+        try {
+            // If all goes according to plan, this should throw an exception due to JAXB being unable to
+            // handle the java.util.List instances in CToolsResponse
+            JAXBContext badContext = JAXBContext.newInstance(CToolsResponse.class);
+            fail();
+        } catch (Exception e) {
+            threw = true;
+        }
+
+        assertTrue(threw);
+
+
+        // This should work, since CToolsResponseWrapper uses arrays instead of Lists.
+        CToolsResponseWrapper orange = new CToolsResponseWrapper(apple);
+        JAXBElement<CToolsResponseWrapper> xml = new JAXBElement<CToolsResponseWrapper>(new QName("CToolsResponse"), CToolsResponseWrapper.class, orange);
+        System.out.println(xml.toString());
+        JAXBContext context = JAXBContext.newInstance(CToolsResponseWrapper.class);
+        Marshaller marshmallow = context.createMarshaller();
+        marshmallow.marshal(xml, System.out);
+        System.out.println("All done");
     }
 }

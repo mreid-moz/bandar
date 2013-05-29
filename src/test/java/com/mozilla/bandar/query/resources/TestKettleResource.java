@@ -1,8 +1,8 @@
 package com.mozilla.bandar.query.resources;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mozilla.bandar.kettle.KettleResult;
+import com.mozilla.bandar.api.CToolsResponse;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class TestKettleResource {
@@ -24,7 +24,6 @@ public class TestKettleResource {
 
     @Test
     public void testKettleResource() throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
         File kettleBase = new File(path);
         assertTrue(kettleBase.exists());
         assertTrue(kettleBase.isDirectory());
@@ -36,22 +35,10 @@ public class TestKettleResource {
         UriInfo ui = Mockito.mock(UriInfo.class);
         Mockito.when(ui.getQueryParameters()).thenReturn(params);
 
+        // Need this to ensure that Kettle gets initialized.
         KettleResource resource = new KettleResource(fullPath);
-        KettleResult result = new KettleResult(fullPath, testEtl, params);
-//        CToolsResponse response = result.getResponse();
-        result.write(output);
+        CToolsResponse response = resource.getKettleResult(testEtl, ui);
 
-        String nice = output.toString("UTF-8");
-        System.out.println(nice);
-        assertTrue(nice.length() > 0);
-
-//        CToolsResponse response = fromJson(nice, CToolsResponse.class);
-//
-//        List<String> endpoints = resource.getQueryNames();
-//        for (String endpoint : endpoints) {
-//            // Make sure that the listFiles thing works and gives at least the items in getQueryNames
-//            assertTrue(responseContains(response, endpoint + ".ktr", "short_filename")
-//                    || responseContains(response, endpoint + ".kjb", "short_filename"));
-//        }
+        assertEquals(3, response.getResultset().size());
     }
 }
