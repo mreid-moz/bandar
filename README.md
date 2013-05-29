@@ -15,11 +15,11 @@ See the 'Quickstart' section below for the tl;dr.
 Each basic data source is located in its own namespace. Currently, that
 includes:
 
-- Filesystem (/file)
+- Filesystem (`/file`)
   - Provides access to a directory of files on the server
-- [CDA - Community Data Access](https://github.com/webdetails/cda) (/cda)
+- [CDA - Community Data Access](https://github.com/webdetails/cda) (`/cda`)
   - Provides access to CDA Data sources
-- [CVB - Community VFS Browser](https://github.com/webdetails/cvb) (/cvb)
+- [CVB - Community VFS Browser](https://github.com/webdetails/cvb) (`/cvb`)
   - Provides access to data using VFS by leveraging
     [Pentaho Data Integration](http://kettle.pentaho.com/)
 
@@ -118,10 +118,10 @@ CDA / CVB Quickstart:
 
 ### Customize configuration:
   - edit the following files to specify correct paths on your machine:
-    - bandar-query.yml
-    - src/main/resources/cda.spring.xml
-    - src/test/resources/cda/repo/sample-kettle.cda
-    - src/test/resources/cpk/cvb.xml
+    - `bandar-query.yml`
+    - `src/main/resources/cda.spring.xml`
+    - `src/test/resources/cda/repo/sample-kettle.cda`
+    - `src/test/resources/cpk/cvb.xml`
   - create a dummy "simple-jndi" directory (not sure why this is necessary...)
     - `mkdir simple-jndi`
 
@@ -164,11 +164,11 @@ CDA / CVB Quickstart:
 
 - Get a list of files in the root dir:
 
-  `curl http://localhost:8080/cda/listFiles`
+  `curl http://localhost:8080/cvb/listFiles`
 
 - Get a list of files in another dir:
 
-  `curl http://localhost:8080/cda/listFiles?URI=%2Ftmp%2Fbandar`
+  `curl http://localhost:8080/cvb/listFiles?URI=%2Ftmp%2Fbandar`
 
 - Refresh the CVB endpoints:
 
